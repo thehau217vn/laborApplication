@@ -92,6 +92,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 	DoiMatKhau doiMatKhau = new DoiMatKhau();
 	DangNhap dangNhap = new DangNhap();
 	ThongTinPhanMem thongTin = new ThongTinPhanMem();
+	private JComboBox<String> cbbCongViec_LaoDong;
+	private DefaultComboBoxModel modelCongViec_laoDong;
+	private DefaultComboBoxModel modelCongViec_baoVe;
+	private JComboBox<String> cbbCongViec_BaoVe;
+	
 
 	class JDateChooserEditor extends DefaultCellEditor {
 
@@ -419,7 +424,17 @@ public class QLLD_Application extends javax.swing.JFrame {
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
 		jTable1 = new javax.swing.JTable();
-
+		
+		modelCongViec_laoDong = new DefaultComboBoxModel<>();
+		modelCongViec_laoDong.addElement("A");
+		modelCongViec_laoDong.addElement("B");
+		cbbCongViec_LaoDong = new JComboBox<String>(modelCongViec_laoDong);
+		
+		modelCongViec_baoVe = new DefaultComboBoxModel<>();
+		modelCongViec_baoVe.addElement("C");
+		modelCongViec_baoVe.addElement("D");
+		cbbCongViec_BaoVe = new JComboBox<String>(modelCongViec_baoVe);
+		
 		jToolBar1.setRollover(true);
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -3303,8 +3318,8 @@ public class QLLD_Application extends javax.swing.JFrame {
 			e.printStackTrace();
 		}
 
-		DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbb_ChonCV);
-		tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+//		DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbb_ChonCV);
+//		tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
 
 		tbl_pcNVThamGia.getColumnModel().getColumn(5).setCellEditor(new JDateChooserEditor(new JCheckBox()));
 		tbl_pcNVThamGia.getColumnModel().getColumn(6).setCellEditor(new JDateChooserEditor(new JCheckBox()));
@@ -4727,8 +4742,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 
 	}
-
+	
 	private void btn_INActionPerformed(java.awt.event.ActionEvent evt) {
+		if (txt_pcMaCT.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Vui Lòng Chọn Công Trình Để PCNV!!");
+			return;
+		}
 		if (tbl_pcDanhSachNV.getSelectedRowCount() > 1) {
 			PhanCong phanCong = new PhanCong();
 			phanCong.setVisible(true);
@@ -4745,16 +4764,28 @@ public class QLLD_Application extends javax.swing.JFrame {
 						row[4] = phanCong.getCbb_ChonCongViec().getSelectedItem().toString();
 						row[5] = phanCong.getPc_NgayBatDau();
 						row[6] = phanCong.getPc_NgayKetThuc();
+						
 						modelPCNVJCT.addRow(row);
 					}
 				}
 			});
 
 		} else {
+
+			
+			String chucVu = modelPCNVNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 4).toString();
+			if(chucVu.equalsIgnoreCase("Lao Động")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_LaoDong);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			}else if(chucVu.equalsIgnoreCase("Bảo Vệ")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_BaoVe);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			}
+			System.out.println(chucVu);
 			Object[] rowData = { tbl_pcNVThamGia.getRowCount() + 1,
 					tbl_pcDanhSachNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 1),
 					tbl_pcDanhSachNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 2),
-					tbl_pcDanhSachNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 5), "Chọn Công Việc" };
+					tbl_pcDanhSachNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 4), "Chọn Công Việc" };
 			modelPCNVJCT.addRow(rowData);
 		}
 
