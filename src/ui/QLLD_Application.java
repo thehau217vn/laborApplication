@@ -96,7 +96,14 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private DefaultComboBoxModel modelCongViec_laoDong;
 	private DefaultComboBoxModel modelCongViec_baoVe;
 	private JComboBox<String> cbbCongViec_BaoVe;
-	
+	private DefaultComboBoxModel modelCongViec_kTrucSu;
+	private JComboBox<String> cbbCongViec_kTrucSu;
+	private DefaultComboBoxModel modelCongViec_KSXD;
+	private JComboBox<String> cbbCongViec_KSXD;
+	private DefaultComboBoxModel modelCongViec_QLCT;
+	private JComboBox<String> cbbCongViec_QLCT;
+	private DefaultComboBoxModel modelCongViec_KSD;
+	private JComboBox<String> cbbCongViec_KSD;
 
 	class JDateChooserEditor extends DefaultCellEditor {
 
@@ -424,17 +431,49 @@ public class QLLD_Application extends javax.swing.JFrame {
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
 		jTable1 = new javax.swing.JTable();
-		
+
 		modelCongViec_laoDong = new DefaultComboBoxModel<>();
-		modelCongViec_laoDong.addElement("A");
-		modelCongViec_laoDong.addElement("B");
+		modelCongViec_laoDong.addElement("Thợ Hồ");
+		modelCongViec_laoDong.addElement("Làm Móng");
+		modelCongViec_laoDong.addElement("Làm Nền");
+		modelCongViec_laoDong.addElement("Chuyển Giàn Giáo");
+		modelCongViec_laoDong.addElement("Tô Tường");
+		modelCongViec_laoDong.addElement("Thợ Chính");
+		modelCongViec_laoDong.addElement("Sơn Tường");
+		modelCongViec_laoDong.addElement("Ốp Gạch");
+		modelCongViec_laoDong.addElement("Làm Trần");
+		modelCongViec_laoDong.addElement("Uốn Cắt Thép");
+		modelCongViec_laoDong.addElement("Làm Vòm");
+		modelCongViec_laoDong.addElement("Xây Cầu Thang");
+		modelCongViec_laoDong.addElement("Bốc Vác");
+		modelCongViec_laoDong.addElement("Lắp Đặt Hệ Thống Cửa");
 		cbbCongViec_LaoDong = new JComboBox<String>(modelCongViec_laoDong);
-		
+
 		modelCongViec_baoVe = new DefaultComboBoxModel<>();
-		modelCongViec_baoVe.addElement("C");
-		modelCongViec_baoVe.addElement("D");
+		modelCongViec_baoVe.addElement("Kiểm Kê Vật Liệu");
+		modelCongViec_baoVe.addElement("Trông Coi Công Trình");
 		cbbCongViec_BaoVe = new JComboBox<String>(modelCongViec_baoVe);
-		
+
+		modelCongViec_kTrucSu = new DefaultComboBoxModel<>();
+		modelCongViec_kTrucSu.addElement("Thiết Kế Quy Hoạch");
+		modelCongViec_kTrucSu.addElement("Thiết Kế Nội Thất");
+		cbbCongViec_kTrucSu = new JComboBox<String>(modelCongViec_kTrucSu);
+
+		modelCongViec_KSXD = new DefaultComboBoxModel<>();
+		modelCongViec_KSXD.addElement("Giám Sát Thiết Kế");
+		modelCongViec_KSXD.addElement("Giám Sát Công Trình");
+		cbbCongViec_KSXD = new JComboBox<String>(modelCongViec_KSXD);
+
+		modelCongViec_QLCT = new DefaultComboBoxModel<>();
+		modelCongViec_QLCT.addElement("Giám Sát Công Trình");
+		modelCongViec_QLCT.addElement("Chỉ Huy CT");
+		cbbCongViec_QLCT = new JComboBox<String>(modelCongViec_QLCT);
+
+		modelCongViec_KSD = new DefaultComboBoxModel<>();
+		modelCongViec_KSD.addElement("Thiết Kế Hệ Thống Điện");
+		modelCongViec_KSD.addElement("Lắp Đặt Dây Điện");
+		cbbCongViec_KSD = new JComboBox<String>(modelCongViec_KSD);
+
 		jToolBar1.setRollover(true);
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -4738,14 +4777,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 			}
 		} else {
-			JOptionPane.showMessageDialog(this, "Dữ Liệu Không Tồn Tại, Vui Lòng Chọn Lại Lựa Chọn Hoặc Nhập Lại Dữ Liệu");
+			JOptionPane.showMessageDialog(this,
+					"Dữ Liệu Không Tồn Tại, Vui Lòng Chọn Lại Lựa Chọn Hoặc Nhập Lại Dữ Liệu");
 		}
 
 	}
-	
+
 	private void btn_INActionPerformed(java.awt.event.ActionEvent evt) {
 		if (txt_pcMaCT.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Vui Lòng Chọn Công Trình Để PCNV!!");
+			JOptionPane.showMessageDialog(this, "Vui Lòng Chọn Công Trình Để PCNV!!!");
 			return;
 		}
 		if (tbl_pcDanhSachNV.getSelectedRowCount() > 1) {
@@ -4764,24 +4804,32 @@ public class QLLD_Application extends javax.swing.JFrame {
 						row[4] = phanCong.getCbb_ChonCongViec().getSelectedItem().toString();
 						row[5] = phanCong.getPc_NgayBatDau();
 						row[6] = phanCong.getPc_NgayKetThuc();
-						
 						modelPCNVJCT.addRow(row);
 					}
 				}
 			});
 
 		} else {
-
-			
 			String chucVu = modelPCNVNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 4).toString();
-			if(chucVu.equalsIgnoreCase("Lao Động")) {
+			if (chucVu.equalsIgnoreCase("Lao Động")) {
 				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_LaoDong);
 				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
-			}else if(chucVu.equalsIgnoreCase("Bảo Vệ")) {
+			} else if (chucVu.equalsIgnoreCase("Bảo Vệ")) {
 				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_BaoVe);
 				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			} else if (chucVu.equalsIgnoreCase("Kiến Trúc Sư")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_kTrucSu);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			} else if (chucVu.equalsIgnoreCase("Kỹ Sư Xây Dựng")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_KSXD);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			} else if (chucVu.equalsIgnoreCase("Quản Lý Công Trình")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_QLCT);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			} else if (chucVu.equalsIgnoreCase("Kỹ Sư Điện")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_KSD);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
 			}
-			System.out.println(chucVu);
 			Object[] rowData = { tbl_pcNVThamGia.getRowCount() + 1,
 					tbl_pcDanhSachNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 1),
 					tbl_pcDanhSachNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 2),
@@ -4792,18 +4840,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 	private void btn_OUTActionPerformed(java.awt.event.ActionEvent evt) {
-		TableModel m1 = tbl_pcNVThamGia.getModel();
-		int[] indexs = tbl_pcNVThamGia.getSelectedRows();
-		Object[] row = new Object[4];
-		DefaultTableModel m2 = (DefaultTableModel) tbl_pcDanhSachNV.getModel();
 
-		for (int i = 0; i < indexs.length; i++) {
-			row[0] = m1.getValueAt(indexs[i], 0);
-			row[1] = m1.getValueAt(indexs[i], 1);
-			row[2] = m1.getValueAt(indexs[i], 2);
-			row[3] = m1.getValueAt(indexs[i], 3);
-			m2.addRow(row);
-		}
 	}
 
 	private void btn_HoanTatActionPerformed(java.awt.event.ActionEvent evt) {
@@ -5503,7 +5540,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 	private void validDataPCNV() {
-		
+
 	}
 
 	/**
@@ -5519,17 +5556,17 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		}
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
