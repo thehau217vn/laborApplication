@@ -14,9 +14,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
@@ -46,6 +53,7 @@ import entity.ChucVu;
 import entity.CongTrinh;
 import entity.CongViec;
 import entity.NhanVien;
+import entity.PhanCongNhanVien;
 import entity.PhongBan;
 import entity.PhuongXa;
 import entity.TinhTP;
@@ -97,7 +105,17 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private DefaultComboBoxModel modelCongViec_laoDong;
 	private DefaultComboBoxModel modelCongViec_baoVe;
 	private JComboBox<String> cbbCongViec_BaoVe;
-	
+	private DefaultComboBoxModel modelCongViec_kTrucSu;
+	private JComboBox<String> cbbCongViec_kTrucSu;
+	private DefaultComboBoxModel modelCongViec_KSXD;
+	private JComboBox<String> cbbCongViec_KSXD;
+	private DefaultComboBoxModel modelCongViec_QLCT;
+	private JComboBox<String> cbbCongViec_QLCT;
+	private DefaultComboBoxModel modelCongViec_KSD;
+	private JComboBox<String> cbbCongViec_KSD;
+	private JComboBox<String> cbb_SLNgayNghi;
+	private DefaultComboBoxModel modelSLNgayNghi;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	class JDateChooserEditor extends DefaultCellEditor {
 
@@ -430,17 +448,49 @@ public class QLLD_Application extends javax.swing.JFrame {
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
 		jTable1 = new javax.swing.JTable();
-		
+
 		modelCongViec_laoDong = new DefaultComboBoxModel<>();
-		modelCongViec_laoDong.addElement("A");
-		modelCongViec_laoDong.addElement("B");
+		modelCongViec_laoDong.addElement("Thợ Hồ");
+		modelCongViec_laoDong.addElement("Làm Móng");
+		modelCongViec_laoDong.addElement("Làm Nền");
+		modelCongViec_laoDong.addElement("Chuyển Giàn Giáo");
+		modelCongViec_laoDong.addElement("Tô Tường");
+		modelCongViec_laoDong.addElement("Thợ Chính");
+		modelCongViec_laoDong.addElement("Sơn Tường");
+		modelCongViec_laoDong.addElement("Ốp Gạch");
+		modelCongViec_laoDong.addElement("Làm Trần");
+		modelCongViec_laoDong.addElement("Uốn Cắt Thép");
+		modelCongViec_laoDong.addElement("Làm Vòm");
+		modelCongViec_laoDong.addElement("Xây Cầu Thang");
+		modelCongViec_laoDong.addElement("Bốc Vác");
+		modelCongViec_laoDong.addElement("Lắp Đặt Hệ Thống Cửa");
 		cbbCongViec_LaoDong = new JComboBox<String>(modelCongViec_laoDong);
-		
+
 		modelCongViec_baoVe = new DefaultComboBoxModel<>();
-		modelCongViec_baoVe.addElement("C");
-		modelCongViec_baoVe.addElement("D");
+		modelCongViec_baoVe.addElement("Kiểm Kê Vật Liệu");
+		modelCongViec_baoVe.addElement("Trông Coi Công Trình");
 		cbbCongViec_BaoVe = new JComboBox<String>(modelCongViec_baoVe);
-		
+
+		modelCongViec_kTrucSu = new DefaultComboBoxModel<>();
+		modelCongViec_kTrucSu.addElement("Thiết Kế Quy Hoạch");
+		modelCongViec_kTrucSu.addElement("Thiết Kế Nội Thất");
+		cbbCongViec_kTrucSu = new JComboBox<String>(modelCongViec_kTrucSu);
+
+		modelCongViec_KSXD = new DefaultComboBoxModel<>();
+		modelCongViec_KSXD.addElement("Giám Sát Thiết Kế");
+		modelCongViec_KSXD.addElement("Giám Sát Công Trình");
+		cbbCongViec_KSXD = new JComboBox<String>(modelCongViec_KSXD);
+
+		modelCongViec_QLCT = new DefaultComboBoxModel<>();
+		modelCongViec_QLCT.addElement("Giám Sát Công Trình");
+		modelCongViec_QLCT.addElement("Chỉ Huy CT");
+		cbbCongViec_QLCT = new JComboBox<String>(modelCongViec_QLCT);
+
+		modelCongViec_KSD = new DefaultComboBoxModel<>();
+		modelCongViec_KSD.addElement("Thiết Kế Hệ Thống Điện");
+		modelCongViec_KSD.addElement("Lắp Đặt Dây Điện");
+		cbbCongViec_KSD = new JComboBox<String>(modelCongViec_KSD);
+
 		jToolBar1.setRollover(true);
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1168,8 +1218,8 @@ public class QLLD_Application extends javax.swing.JFrame {
 			tbl_ChuyenMon.getColumnModel().getColumn(1).setMaxWidth(100);
 			tbl_ChuyenMon.getColumnModel().getColumn(2).setMinWidth(150);
 			tbl_ChuyenMon.getColumnModel().getColumn(2).setMaxWidth(150);
-			tbl_ChuyenMon.getColumnModel().getColumn(3).setMinWidth(80);
-			tbl_ChuyenMon.getColumnModel().getColumn(3).setMaxWidth(80);
+			tbl_ChuyenMon.getColumnModel().getColumn(3).setMinWidth(100);
+			tbl_ChuyenMon.getColumnModel().getColumn(3).setMaxWidth(100);
 			tbl_ChuyenMon.getColumnModel().getColumn(4).setMinWidth(80);
 			tbl_ChuyenMon.getColumnModel().getColumn(4).setMaxWidth(80);
 			tbl_ChuyenMon.getColumnModel().getColumn(5).setMinWidth(100);
@@ -1178,16 +1228,26 @@ public class QLLD_Application extends javax.swing.JFrame {
 			tbl_ChuyenMon.getColumnModel().getColumn(6).setMaxWidth(250);
 			tbl_ChuyenMon.getColumnModel().getColumn(7).setMinWidth(150);
 			tbl_ChuyenMon.getColumnModel().getColumn(7).setMaxWidth(150);
-			tbl_ChuyenMon.getColumnModel().getColumn(8).setMinWidth(150);
-			tbl_ChuyenMon.getColumnModel().getColumn(8).setMaxWidth(150);
+			tbl_ChuyenMon.getColumnModel().getColumn(8).setMinWidth(130);
+			tbl_ChuyenMon.getColumnModel().getColumn(8).setMaxWidth(130);
 			tbl_ChuyenMon.getColumnModel().getColumn(9).setMinWidth(150);
 			tbl_ChuyenMon.getColumnModel().getColumn(9).setMaxWidth(150);
 			tbl_ChuyenMon.getColumnModel().getColumn(10).setMinWidth(100);
 			tbl_ChuyenMon.getColumnModel().getColumn(10).setMaxWidth(100);
 		}
 
-		cbb_TimCM.setModel(
-				new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+		cbb_TimCM.setModel(new javax.swing.DefaultComboBoxModel<>(
+				new String[] { "Chọn Chuyên Môn", "Kỹ Sư", "Quản Lý", "Kinh Tế", "Công Nhân" }));
+		cbb_TimCM.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				try {
+					cbb_TimCMActionPerformed(evt);
+				} catch (SQLException e) {
+
+					e.printStackTrace();
+				}
+			}
+		});
 
 		javax.swing.GroupLayout pn_QuanLyCMLayout = new javax.swing.GroupLayout(pn_QuanLyCM);
 		pn_QuanLyCM.setLayout(pn_QuanLyCMLayout);
@@ -3068,7 +3128,8 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_LocCT.setFont(new java.awt.Font("Tahoma", 0, 16));
 		lbl_LocCT.setText("Tìm Kiếm Theo:");
 
-		cbb_LocCT.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã Công Trình", "Tên Công Trình" }));
+		cbb_LocCT.setModel(
+				new javax.swing.DefaultComboBoxModel<>(new String[] { "Tùy Chọn", "Mã Công Trình", "Tên Công Trình" }));
 		cbb_LocCT.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				cbb_LocCTActionPerformed(evt);
@@ -3142,7 +3203,9 @@ public class QLLD_Application extends javax.swing.JFrame {
 				int row = tbl_pcQLCT.getSelectedRow();
 				txt_pcMaCT.setText(modelPCNVCT.getValueAt(row, 1).toString());
 				txt_pcTenCT.setText(modelPCNVCT.getValueAt(row, 2).toString());
-				txt_pcDiaChiCT.setText(modelPCNVCT.getValueAt(row, 3).toString());
+				String temp = modelPCNVCT.getValueAt(row, 3).toString();
+				String[] diaChi = temp.split(",");
+				txt_pcDiaChiCT.setText(diaChi[1] + "," + diaChi[2]);
 				String trangThai = modelPCNVCT.getValueAt(row, 7).toString();
 
 				try {
@@ -3345,7 +3408,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 				javax.swing.border.TitledBorder.TOP));
 
 // ===========================================PhanCongNhanVienThamGiaCongTrinh===============================================
-		String[] headerPCNVJCT = ("STT;Mã Nhân Viên;Tên Nhân Viên;Phòng Ban;Công Việc;Ngày Bắt Đầu;Ngày Kết Thúc")
+		String[] headerPCNVJCT = ("STT;Mã Nhân Viên;Tên Nhân Viên;Chức Vụ;Công Việc;Ngày Bắt Đầu;Ngày Kết Thúc")
 				.split(";");
 		modelPCNVJCT = new DefaultTableModel(headerPCNVJCT, 0);
 		tbl_pcNVThamGia.setModel(modelPCNVJCT);
@@ -3689,7 +3752,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 				javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
 
 //===========================================BangChamCongNhanVien================================================================
-		String[] headerBCCNV = ("STT;Mã Nhân Viên;Tên Nhân Viên;Ngày Sinh;Giới Tính;Số CMND;Địa Chỉ;Số Điện Thoại;Chức Vụ;Phòng Ban")
+		String[] headerBCCNV = ("STT;Mã Nhân Viên;Tên Nhân Viên;Ngày Sinh;Giới Tính;Số CMND;Địa Chỉ;Số Điện Thoại;Chức Vụ")
 				.split(";");
 		modelBCCNV = new DefaultTableModel(headerBCCNV, 0);
 		tbl_bccDSNV.setModel(modelBCCNV);
@@ -3705,18 +3768,16 @@ public class QLLD_Application extends javax.swing.JFrame {
 			tbl_bccDSNV.getColumnModel().getColumn(2).setMaxWidth(150);
 			tbl_bccDSNV.getColumnModel().getColumn(3).setMinWidth(100);
 			tbl_bccDSNV.getColumnModel().getColumn(3).setMaxWidth(100);
-			tbl_bccDSNV.getColumnModel().getColumn(4).setMinWidth(80);
-			tbl_bccDSNV.getColumnModel().getColumn(4).setMaxWidth(80);
+			tbl_bccDSNV.getColumnModel().getColumn(4).setMinWidth(100);
+			tbl_bccDSNV.getColumnModel().getColumn(4).setMaxWidth(100);
 			tbl_bccDSNV.getColumnModel().getColumn(5).setMinWidth(85);
 			tbl_bccDSNV.getColumnModel().getColumn(5).setMaxWidth(85);
-			tbl_bccDSNV.getColumnModel().getColumn(6).setMinWidth(100);
-			tbl_bccDSNV.getColumnModel().getColumn(6).setMaxWidth(100);
+			tbl_bccDSNV.getColumnModel().getColumn(6).setMinWidth(180);
+			tbl_bccDSNV.getColumnModel().getColumn(6).setMaxWidth(180);
 			tbl_bccDSNV.getColumnModel().getColumn(7).setMinWidth(100);
 			tbl_bccDSNV.getColumnModel().getColumn(7).setMaxWidth(100);
 			tbl_bccDSNV.getColumnModel().getColumn(8).setMinWidth(100);
 			tbl_bccDSNV.getColumnModel().getColumn(8).setMaxWidth(100);
-			tbl_bccDSNV.getColumnModel().getColumn(9).setMinWidth(100);
-			tbl_bccDSNV.getColumnModel().getColumn(9).setMaxWidth(100);
 		}
 
 		tbl_bccDSNV.addMouseListener(new MouseListener() {
@@ -3748,8 +3809,16 @@ public class QLLD_Application extends javax.swing.JFrame {
 				txt_bccMaNV.setText(modelBCCNV.getValueAt(row, 1).toString());
 				txt_bccnvTenNV.setText(modelBCCNV.getValueAt(row, 2).toString());
 				txt_bccCMND.setText(modelBCCNV.getValueAt(row, 5).toString());
-				txt_bccDiaChi.setText(modelBCCNV.getValueAt(row, 6).toString());
+				String temp = modelBCCNV.getValueAt(row, 6).toString();
+				String[] diaChi = temp.split(",");
+				txt_bccDiaChi.setText(diaChi[1] + "," + diaChi[2] + "," + diaChi[3]);
 				txt_bccSDT.setText(modelBCCNV.getValueAt(row, 7).toString());
+				try {
+					modelBCCCT.setRowCount(0);
+					getDataCC(txt_bccMaNV.getText());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				try {
 					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelBCCNV.getValueAt(row, 3));
 					DateChooser_bccNamSinh.setDate(date);
@@ -3764,8 +3833,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 					Rbtn_bccNu.setSelected(true);
 				}
 				cbb_nvChonChVu1.setSelectedItem(modelBCCNV.getValueAt(row, 8).toString());
-				cbb_nvChonPB1.setSelectedItem(modelBCCNV.getValueAt(row, 9).toString());
-
+				try {
+					
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 		});
 
@@ -3809,6 +3881,39 @@ public class QLLD_Application extends javax.swing.JFrame {
 			tbl_bccBangChamCong.getColumnModel().getColumn(8).setMinWidth(150);
 			tbl_bccBangChamCong.getColumnModel().getColumn(8).setMaxWidth(150);
 		}
+		modelSLNgayNghi = new DefaultComboBoxModel<>();
+		modelSLNgayNghi.addElement(1);
+		modelSLNgayNghi.addElement(2);
+		modelSLNgayNghi.addElement(3);
+		modelSLNgayNghi.addElement(4);
+		modelSLNgayNghi.addElement(5);
+		modelSLNgayNghi.addElement(6);
+		modelSLNgayNghi.addElement(7);
+		modelSLNgayNghi.addElement(8);
+		modelSLNgayNghi.addElement(9);
+		modelSLNgayNghi.addElement(10);
+		modelSLNgayNghi.addElement(11);
+		modelSLNgayNghi.addElement(12);
+		cbb_SLNgayNghi = new JComboBox<String>(modelSLNgayNghi);
+		DefaultCellEditor cellEditorBCC = new DefaultCellEditor(cbb_SLNgayNghi);
+		tbl_bccBangChamCong.getColumnModel().getColumn(7).setCellEditor(cellEditorBCC);
+		String temp = cbb_SLNgayNghi.getSelectedItem().toString();
+		cbb_SLNgayNghi.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int dayOff = Integer.parseInt(temp);
+				Date d1 = null;
+				Date d2 = null;
+				try {
+					d1 = sdf.parse((String) modelBCCCT.getValueAt(tbl_bccBangChamCong.getSelectedRow(), 5));
+					d2 = sdf.parse((String) modelBCCCT.getValueAt(tbl_bccBangChamCong.getSelectedRow(), 6));
+					int totalDay = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) - dayOff;
+					modelBCCCT.setValueAt(totalDay, tbl_bccBangChamCong.getSelectedRow(), 8);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		});
 
 		javax.swing.GroupLayout pn_BangChamCongLayout = new javax.swing.GroupLayout(pn_BangChamCong);
 		pn_BangChamCong.setLayout(pn_BangChamCongLayout);
@@ -3900,7 +4005,16 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 		btn_XacNhanThongKe.setFont(new java.awt.Font("Tahoma", 1, 20));
 		btn_XacNhanThongKe.setText("Lọc Thông Tin");
-
+		btn_XacNhanThongKe.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				try {
+					btn_XacNhanThongKeActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 //===========================================ThongKeCongTrinh============================================================
 		String[] headerTKCT = ("STT;Mã Công Trình;Tên Công Trình;Địa Chỉ;Loại Hình;Số Giấy Phép;Ngày Cấp Phép;Ngày Khởi Công;Ngày Hoàn Thành;Trạng Thái")
 				.split(";");
@@ -4345,11 +4459,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 		getDataQLCT();
 		getDataPCNVCT();
 		getDataPCNVNV();
+<<<<<<< HEAD
 		getDataQLPB();
 		getDataQLCV();
 		getDataQLCVu();
 		// getDataBCC();
 		pack();
+=======
+		getDataBCCNV();
+>>>>>>> master
 	}
 
 	private void txt_ttcnPhongBanActionPerformed(java.awt.event.ActionEvent evt) {
@@ -4800,6 +4918,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 	private void btn_pcTimCTActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		boolean in1 = cbb_LocCT.getSelectedItem().toString().equalsIgnoreCase("Mã Công Trình");
+		boolean in2 = cbb_LocCT.getSelectedItem().toString().equalsIgnoreCase("Tên Công Trình");
 		String inIndex = txt_pcTimTenCT.getText();
 		if (in1 && inIndex.length() > 0) {
 			List<CongTrinh> dsCT = congTrinh_DAO.getCongTrinhTheoMaCT(inIndex);
@@ -4813,7 +4932,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 					}
 				}
 			}
-		} else if (!in1 && inIndex.length() > 0) {
+		} else if (in2 && inIndex.length() > 0) {
 			List<CongTrinh> dsCT = congTrinh_DAO.getCongTrinhTheoTenCT(inIndex);
 			if (dsCT != null) {
 				deleteDataPCNVCT();
@@ -4826,14 +4945,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 			}
 		} else {
-			JOptionPane.showMessageDialog(this, "Dữ Liệu Không Tồn Tại, Vui Lòng Chọn Lại Lựa Chọn Hoặc Nhập Lại Dữ Liệu");
+			JOptionPane.showMessageDialog(this,
+					"Dữ Liệu Không Tồn Tại, Vui Lòng Chọn Lại Lựa Chọn Hoặc Nhập Lại Dữ Liệu");
 		}
 
 	}
-	
+
 	private void btn_INActionPerformed(java.awt.event.ActionEvent evt) {
 		if (txt_pcMaCT.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Vui Lòng Chọn Công Trình Để PCNV!!");
+			JOptionPane.showMessageDialog(this, "Vui Lòng Chọn Công Trình Để PCNV!!!");
 			return;
 		}
 		if (tbl_pcDanhSachNV.getSelectedRowCount() > 1) {
@@ -4848,28 +4968,63 @@ public class QLLD_Application extends javax.swing.JFrame {
 						row[0] = modelPCNVJCT.getRowCount() + 1;
 						row[1] = modelPCNVNV.getValueAt(indexs[i], 1);
 						row[2] = modelPCNVNV.getValueAt(indexs[i], 2);
-						row[3] = modelPCNVNV.getValueAt(indexs[i], 5);
+						row[3] = modelPCNVNV.getValueAt(indexs[i], 4);
 						row[4] = phanCong.getCbb_ChonCongViec().getSelectedItem().toString();
 						row[5] = phanCong.getPc_NgayBatDau();
 						row[6] = phanCong.getPc_NgayKetThuc();
-						
-						modelPCNVJCT.addRow(row);
+						Date date1 = null;
+						Date date2 = null;
+						LocalDate localDate = LocalDate.now();
+						Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+						try {
+							date1 = sdf.parse(row[5].toString());
+							date2 = sdf.parse(row[6].toString());
+
+							if (date1.before(date) || date1.equals(date)) {
+								JOptionPane.showMessageDialog(null, "Ngày Bắt Đầu Phải Lớn Hơn Ngày Hiện Tại");
+								return;
+							}
+							if (date2.before(date1) || date2.equals(date1)) {
+								JOptionPane.showMessageDialog(null,
+										"Ngày Kết Thúc Không Được Bằng Hoặc Bé Hơn Ngày Bắt Đầu");
+								return;
+							}
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						if (row[3].toString().equalsIgnoreCase("Lao Động")) {
+							modelPCNVJCT.addRow(row);
+						} else {
+							JOptionPane.showMessageDialog(null, "Chỉ Được Phân Công Hàng Loạt Cho Lao Động");
+							return;
+						}
+
 					}
+					return;
 				}
 			});
 
 		} else {
-
-			
 			String chucVu = modelPCNVNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 4).toString();
-			if(chucVu.equalsIgnoreCase("Lao Động")) {
+			if (chucVu.equalsIgnoreCase("Lao Động")) {
 				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_LaoDong);
 				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
-			}else if(chucVu.equalsIgnoreCase("Bảo Vệ")) {
+			} else if (chucVu.equalsIgnoreCase("Bảo Vệ")) {
 				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_BaoVe);
 				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			} else if (chucVu.equalsIgnoreCase("Kiến Trúc Sư")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_kTrucSu);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			} else if (chucVu.equalsIgnoreCase("Kỹ Sư Xây Dựng")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_KSXD);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			} else if (chucVu.equalsIgnoreCase("Quản Lý Công Trình")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_QLCT);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
+			} else if (chucVu.equalsIgnoreCase("Kỹ Sư Điện")) {
+				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_KSD);
+				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
 			}
-			System.out.println(chucVu);
 			Object[] rowData = { tbl_pcNVThamGia.getRowCount() + 1,
 					tbl_pcDanhSachNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 1),
 					tbl_pcDanhSachNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 2),
@@ -4880,18 +5035,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 	private void btn_OUTActionPerformed(java.awt.event.ActionEvent evt) {
-		TableModel m1 = tbl_pcNVThamGia.getModel();
-		int[] indexs = tbl_pcNVThamGia.getSelectedRows();
-		Object[] row = new Object[4];
-		DefaultTableModel m2 = (DefaultTableModel) tbl_pcDanhSachNV.getModel();
-
-		for (int i = 0; i < indexs.length; i++) {
-			row[0] = m1.getValueAt(indexs[i], 0);
-			row[1] = m1.getValueAt(indexs[i], 1);
-			row[2] = m1.getValueAt(indexs[i], 2);
-			row[3] = m1.getValueAt(indexs[i], 3);
-			m2.addRow(row);
+		if (tbl_pcNVThamGia.getSelectedRow() > 1) {
+			int[] indexs = tbl_pcNVThamGia.getSelectedRows();
+			for (int i = indexs.length - 1; i >= 0; i--) {
+				modelPCNVJCT.removeRow(indexs[i]);
+			}
+		} else {
+			modelPCNVJCT.removeRow(tbl_pcNVThamGia.getSelectedRow());
 		}
+
 	}
 
 	private void btn_HoanTatActionPerformed(java.awt.event.ActionEvent evt) {
@@ -5060,6 +5212,18 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 
+	private void btn_XacNhanThongKeActionPerformed(ActionEvent evt) throws SQLException {
+		modelTKCT.setRowCount(0);
+		txt_SoLuong.setText("");
+		Object o = evt.getSource();
+		if (o.equals(btn_XacNhanThongKe)) {
+			getDataTKCTWD(txt_NamXD.getText());
+			int temp = modelTKCT.getRowCount();
+			String quantity = Integer.toString(temp);
+			txt_SoLuong.setText(quantity);
+		}
+	}
+
 	private void txt_SoLuongActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 
@@ -5086,6 +5250,26 @@ public class QLLD_Application extends javax.swing.JFrame {
 			String quantity = Integer.toString(temp);
 			txt_SoLuong.setText(quantity);
 			txt_NamXD.setText("");
+		}
+	}
+
+	private void cbb_TimCMActionPerformed(ActionEvent evt) throws SQLException {
+		modelCM.setRowCount(0);
+		if (cbb_TimCM.getSelectedIndex() == 0) {
+			JOptionPane.showMessageDialog(this, "Vui Lòng Chọn Chuyên Môn Muốn Lọc");
+			return;
+		}
+		if (cbb_TimCM.getSelectedItem().toString().equalsIgnoreCase("Kỹ Sư")) {
+			getDataQLCM0();
+		}
+		if (cbb_TimCM.getSelectedItem().toString().equalsIgnoreCase("Quản Lý")) {
+			getDataQLCM1();
+		}
+		if (cbb_TimCM.getSelectedItem().toString().equalsIgnoreCase("Kinh Tế")) {
+			getDataQLCM2();
+		}
+		if (cbb_TimCM.getSelectedItem().toString().equalsIgnoreCase("Công Nhân")) {
+			getDataQLCM3();
 		}
 	}
 
@@ -5129,6 +5313,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 			}
 
 		}
+
 		try {
 			@SuppressWarnings("static-access")
 			Connection con = ConnectDB.getInstance().getConnect();
@@ -5320,6 +5505,60 @@ public class QLLD_Application extends javax.swing.JFrame {
 						nv.isGioiTinh() ? "Nam" : "Nữ", nv.getSoCMND(), nv.getDiaChi(), nv.getSoDT(), nv.getChucVu(),
 						nv.getPhongBan() });
 				i++;
+			}
+		}
+	}
+
+//==================================================QuanLyChuyenMon=============================================
+	private void getDataQLCM0() throws SQLException {
+		List<NhanVien> list = nhanVien_DAO.getAllNhanVien();
+		if (list.size() != 0) {
+			for (NhanVien nv : list) {
+				if (nv.getChucVu().toString().matches("Kỹ Sư Xây Dựng|Kiến Trúc Sư|Kỹ Sư Điện|Kỹ Sư IOT|Kỹ Sư  WEB")) {
+					modelCM.addRow(new Object[] { modelCM.getRowCount() + 1, nv.getMaNhanVien(), nv.getTenNhanVien(),
+							nv.getNgaySinh(), nv.isGioiTinh() ? "Nam" : "Nữ", nv.getSoCMND(), nv.getDiaChi(),
+							nv.getSoDT(), "Kỹ Sư", nv.getChucVu(), nv.getPhongBan() });
+				}
+			}
+		}
+	}
+
+	private void getDataQLCM1() throws SQLException {
+		List<NhanVien> list = nhanVien_DAO.getAllNhanVien();
+		if (list.size() != 0) {
+			for (NhanVien nv : list) {
+				if (nv.getChucVu().toString().matches("Giám Đốc|Quản Lý Công Trường|Trưởng Phòng Nhân Sự")) {
+					modelCM.addRow(new Object[] { modelCM.getRowCount() + 1, nv.getMaNhanVien(), nv.getTenNhanVien(),
+							nv.getNgaySinh(), nv.isGioiTinh() ? "Nam" : "Nữ", nv.getSoCMND(), nv.getDiaChi(),
+							nv.getSoDT(), "Quản Lý", nv.getChucVu(), nv.getPhongBan() });
+				}
+			}
+		}
+	}
+
+	private void getDataQLCM2() throws SQLException {
+		List<NhanVien> list = nhanVien_DAO.getAllNhanVien();
+		if (list.size() != 0) {
+			for (NhanVien nv : list) {
+				if (nv.getChucVu().toString()
+						.matches("Chuyên Viên Thiết Kế|Chuyên Viên Marketing|Chuyên Viên Phân Tích|Kế Toán")) {
+					modelCM.addRow(new Object[] { modelCM.getRowCount() + 1, nv.getMaNhanVien(), nv.getTenNhanVien(),
+							nv.getNgaySinh(), nv.isGioiTinh() ? "Nam" : "Nữ", nv.getSoCMND(), nv.getDiaChi(),
+							nv.getSoDT(), "Kinh Tế - Tài Chính", nv.getChucVu(), nv.getPhongBan() });
+				}
+			}
+		}
+	}
+
+	private void getDataQLCM3() throws SQLException {
+		List<NhanVien> list = nhanVien_DAO.getAllNhanVien();
+		if (list.size() != 0) {
+			for (NhanVien nv : list) {
+				if (nv.getChucVu().toString().matches("Lao Động|Đầu Bếp|Bếp Trưởng|Bảo Vệ|Tổ Trưởng Bảo Vệ")) {
+					modelCM.addRow(new Object[] { modelCM.getRowCount() + 1, nv.getMaNhanVien(), nv.getTenNhanVien(),
+							nv.getNgaySinh(), nv.isGioiTinh() ? "Nam" : "Nữ", nv.getSoCMND(), nv.getDiaChi(),
+							nv.getSoDT(), "Công Nhân", nv.getChucVu(), nv.getPhongBan() });
+				}
 			}
 		}
 	}
@@ -5518,12 +5757,36 @@ public class QLLD_Application extends javax.swing.JFrame {
 //=============================================BangChamCong=========================================
 	private void getDataBCCNV() throws SQLException {
 		int i = 1;
-		List<NhanVien> list = nhanVien_DAO.getAllNhanVien();
+		List<PhanCongNhanVien> list = phanCong_DAO.getAllPCNVInCT();
 		if (list.size() != 0) {
-			for (NhanVien nv : list) {
-				modelBCCNV.addRow(new Object[] { i, nv.getMaNhanVien(), nv.getTenNhanVien(), nv.getNgaySinh(),
-						nv.isGioiTinh() ? "Nam" : "Nữ", nv.getSoCMND(), nv.getDiaChi(), nv.getSoDT(), nv.getChucVu(),
-						nv.getPhongBan() });
+			for (PhanCongNhanVien nv : list) {
+				modelBCCNV.addRow(new Object[] { i, nv.getNhanVien().getMaNhanVien(), nv.getTenNhanVien(),
+						nv.getNgaySinh(), nv.isGioiTinh() ? "Nam" : "Nữ", nv.getSoCMND(), nv.getDiaChi(), nv.getSoDT(),
+						nv.getTenChucVu() });
+				i++;
+			}
+		}
+	}
+
+	private void getDataCC(String id) throws SQLException {
+		int i = 1;
+		List<PhanCongNhanVien> list = phanCong_DAO.getPCNVTheoMaNV(id);
+		if (list.size() != 0) {
+			for (PhanCongNhanVien pcnv : list) {
+				modelBCCCT.addRow(new Object[] { i, pcnv.getCongTrinh().getMaCongTrinh(), pcnv.getTenCongTrinh(),
+						pcnv.getDiaDiem(), pcnv.getCongViec(), pcnv.getNgayBatDau(), pcnv.getNgayKetThuc() });
+				i++;
+			}
+		}
+	}
+
+	private void getTotalDay(String id) throws SQLException {
+		int i = 1;
+		List<PhanCongNhanVien> list = phanCong_DAO.getPCNVTheoMaNV(id);
+		if (list.size() != 0) {
+			for (PhanCongNhanVien pcnv : list) {
+				modelBCCCT.addRow(new Object[] { i, pcnv.getCongTrinh().getMaCongTrinh(), pcnv.getTenCongTrinh(),
+						pcnv.getDiaDiem(), pcnv.getCongViec(), pcnv.getNgayBatDau(), pcnv.getNgayKetThuc() });
 				i++;
 			}
 		}
@@ -5746,7 +6009,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 	private void validDataPCNV() {
-		
+
 	}
 
 	/**
@@ -5762,17 +6025,17 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		}
 
 		java.awt.EventQueue.invokeLater(new Runnable() {
