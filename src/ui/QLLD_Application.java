@@ -3117,7 +3117,9 @@ public class QLLD_Application extends javax.swing.JFrame {
 				int row = tbl_pcQLCT.getSelectedRow();
 				txt_pcMaCT.setText(modelPCNVCT.getValueAt(row, 1).toString());
 				txt_pcTenCT.setText(modelPCNVCT.getValueAt(row, 2).toString());
-				txt_pcDiaChiCT.setText(modelPCNVCT.getValueAt(row, 3).toString());
+				String temp = modelPCNVCT.getValueAt(row, 3).toString();
+				String[] diaChi = temp.split(",");
+				txt_pcDiaChiCT.setText(diaChi[1] + "," + diaChi[2]);
 				String trangThai = modelPCNVCT.getValueAt(row, 7).toString();
 
 				try {
@@ -3320,7 +3322,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 				javax.swing.border.TitledBorder.TOP));
 
 // ===========================================PhanCongNhanVienThamGiaCongTrinh===============================================
-		String[] headerPCNVJCT = ("STT;Mã Nhân Viên;Tên Nhân Viên;Phòng Ban;Công Việc;Ngày Bắt Đầu;Ngày Kết Thúc")
+		String[] headerPCNVJCT = ("STT;Mã Nhân Viên;Tên Nhân Viên;Chức Vụ;Công Việc;Ngày Bắt Đầu;Ngày Kết Thúc")
 				.split(";");
 		modelPCNVJCT = new DefaultTableModel(headerPCNVJCT, 0);
 		tbl_pcNVThamGia.setModel(modelPCNVJCT);
@@ -4800,12 +4802,19 @@ public class QLLD_Application extends javax.swing.JFrame {
 						row[0] = modelPCNVJCT.getRowCount() + 1;
 						row[1] = modelPCNVNV.getValueAt(indexs[i], 1);
 						row[2] = modelPCNVNV.getValueAt(indexs[i], 2);
-						row[3] = modelPCNVNV.getValueAt(indexs[i], 5);
+						row[3] = modelPCNVNV.getValueAt(indexs[i], 4);
 						row[4] = phanCong.getCbb_ChonCongViec().getSelectedItem().toString();
 						row[5] = phanCong.getPc_NgayBatDau();
 						row[6] = phanCong.getPc_NgayKetThuc();
-						modelPCNVJCT.addRow(row);
+						if (row[3].toString().equalsIgnoreCase("Lao Động")) {
+							modelPCNVJCT.addRow(row);
+						} else {
+							JOptionPane.showMessageDialog(null, "Chỉ Được Phân Công Hàng Loạt Cho Lao Động");
+							return;
+						}
+						
 					}
+					return;
 				}
 			});
 
@@ -5056,6 +5065,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 			}
 
 		}
+		
 		try {
 			@SuppressWarnings("static-access")
 			Connection con = ConnectDB.getInstance().getConnect();

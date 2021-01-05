@@ -48,18 +48,20 @@ public class PhanCong extends javax.swing.JFrame {
 		lbl_ChonCongViec.setText("Chọn công việc:");
 
 		cbb_ChonCongViec.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn Công Việc" }));
-		try {
-			Connection con = ConnectDB.getConnect();
-			String sql = "SELECT tenCongViec FROM tbl_CongViec";
-			Statement statement = con.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				cbb_ChonCongViec.addItem(resultSet.getString(1));
-			}
-		} catch (SQLException e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
+		cbb_ChonCongViec.addItem("Thợ Hồ");
+		cbb_ChonCongViec.addItem("Làm Móng");
+		cbb_ChonCongViec.addItem("Làm Nền");
+		cbb_ChonCongViec.addItem("Chuyển Giàn Giáo");
+		cbb_ChonCongViec.addItem("Tô Tường");
+		cbb_ChonCongViec.addItem("Thợ Chính");
+		cbb_ChonCongViec.addItem("Sơn Tường");
+		cbb_ChonCongViec.addItem("Ốp Gạch");
+		cbb_ChonCongViec.addItem("Làm Trần");
+		cbb_ChonCongViec.addItem("Uốn Cắt Thép");
+		cbb_ChonCongViec.addItem("Làm Vòm");
+		cbb_ChonCongViec.addItem("Xây Cầu Thang");
+		cbb_ChonCongViec.addItem("Bốc Vác");
+		cbb_ChonCongViec.addItem("Lắp Đặt Hệ Thống Cửa");
 		AutoCompleteDecorator.decorate(cbb_ChonCongViec);
 
 		btn_DongY.setBackground(new java.awt.Color(102, 204, 0));
