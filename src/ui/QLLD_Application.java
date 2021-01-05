@@ -13,6 +13,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -104,6 +107,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private JComboBox<String> cbbCongViec_QLCT;
 	private DefaultComboBoxModel modelCongViec_KSD;
 	private JComboBox<String> cbbCongViec_KSD;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	class JDateChooserEditor extends DefaultCellEditor {
 
@@ -3877,7 +3881,16 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 		btn_XacNhanThongKe.setFont(new java.awt.Font("Tahoma", 1, 20));
 		btn_XacNhanThongKe.setText("Lọc Thông Tin");
-
+		btn_XacNhanThongKe.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				try {
+					btn_XacNhanThongKeActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 //===========================================ThongKeCongTrinh============================================================
 		String[] headerTKCT = ("STT;Mã Công Trình;Tên Công Trình;Địa Chỉ;Loại Hình;Số Giấy Phép;Ngày Cấp Phép;Ngày Khởi Công;Ngày Hoàn Thành;Trạng Thái")
 				.split(";");
@@ -4806,13 +4819,33 @@ public class QLLD_Application extends javax.swing.JFrame {
 						row[4] = phanCong.getCbb_ChonCongViec().getSelectedItem().toString();
 						row[5] = phanCong.getPc_NgayBatDau();
 						row[6] = phanCong.getPc_NgayKetThuc();
+						Date date1 = null;
+						Date date2 = null;
+						LocalDate localDate = LocalDate.now();
+						Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+						try {
+							date1 = sdf.parse(row[5].toString());
+							date2 = sdf.parse(row[6].toString());
+
+							if (date1.before(date) || date1.equals(date)) {
+								JOptionPane.showMessageDialog(null, "Ngày Bắt Đầu Phải Lớn Hơn Ngày Hiện Tại");
+								return;
+							}
+							if (date2.before(date1) || date2.equals(date1)) {
+								JOptionPane.showMessageDialog(null,
+										"Ngày Kết Thúc Không Được Bằng Hoặc Bé Hơn Ngày Bắt Đầu");
+								return;
+							}
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
 						if (row[3].toString().equalsIgnoreCase("Lao Động")) {
 							modelPCNVJCT.addRow(row);
 						} else {
 							JOptionPane.showMessageDialog(null, "Chỉ Được Phân Công Hàng Loạt Cho Lao Động");
 							return;
 						}
-						
+
 					}
 					return;
 				}
@@ -4996,6 +5029,18 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 	}
 
+	private void btn_XacNhanThongKeActionPerformed(ActionEvent evt) throws SQLException {
+		modelTKCT.setRowCount(0);
+		txt_SoLuong.setText("");
+		Object o = evt.getSource();
+		if (o.equals(btn_XacNhanThongKe)) {
+			getDataTKCTWD(txt_NamXD.getText());
+			int temp = modelTKCT.getRowCount();
+			String quantity = Integer.toString(temp);
+			txt_SoLuong.setText(quantity);
+		}
+	}
+
 	private void txt_SoLuongActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 
@@ -5065,7 +5110,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 			}
 
 		}
-		
+
 		try {
 			@SuppressWarnings("static-access")
 			Connection con = ConnectDB.getInstance().getConnect();
