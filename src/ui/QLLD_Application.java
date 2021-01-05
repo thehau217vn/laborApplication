@@ -13,13 +13,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
@@ -109,6 +112,8 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private JComboBox<String> cbbCongViec_QLCT;
 	private DefaultComboBoxModel modelCongViec_KSD;
 	private JComboBox<String> cbbCongViec_KSD;
+	private JComboBox<String> cbb_SLNgayNghi;
+	private DefaultComboBoxModel modelSLNgayNghi;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	class JDateChooserEditor extends DefaultCellEditor {
@@ -3764,8 +3769,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 					Rbtn_bccNu.setSelected(true);
 				}
 				cbb_nvChonChVu1.setSelectedItem(modelBCCNV.getValueAt(row, 8).toString());
-				cbb_nvChonPB1.setSelectedItem(modelBCCNV.getValueAt(row, 9).toString());
-
+				try {
+					
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 		});
 
@@ -3809,6 +3817,39 @@ public class QLLD_Application extends javax.swing.JFrame {
 			tbl_bccBangChamCong.getColumnModel().getColumn(8).setMinWidth(150);
 			tbl_bccBangChamCong.getColumnModel().getColumn(8).setMaxWidth(150);
 		}
+		modelSLNgayNghi = new DefaultComboBoxModel<>();
+		modelSLNgayNghi.addElement(1);
+		modelSLNgayNghi.addElement(2);
+		modelSLNgayNghi.addElement(3);
+		modelSLNgayNghi.addElement(4);
+		modelSLNgayNghi.addElement(5);
+		modelSLNgayNghi.addElement(6);
+		modelSLNgayNghi.addElement(7);
+		modelSLNgayNghi.addElement(8);
+		modelSLNgayNghi.addElement(9);
+		modelSLNgayNghi.addElement(10);
+		modelSLNgayNghi.addElement(11);
+		modelSLNgayNghi.addElement(12);
+		cbb_SLNgayNghi = new JComboBox<String>(modelSLNgayNghi);
+		DefaultCellEditor cellEditorBCC = new DefaultCellEditor(cbb_SLNgayNghi);
+		tbl_bccBangChamCong.getColumnModel().getColumn(7).setCellEditor(cellEditorBCC);
+		String temp = cbb_SLNgayNghi.getSelectedItem().toString();
+		cbb_SLNgayNghi.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int dayOff = Integer.parseInt(temp);
+				Date d1 = null;
+				Date d2 = null;
+				try {
+					d1 = sdf.parse((String) modelBCCCT.getValueAt(tbl_bccBangChamCong.getSelectedRow(), 5));
+					d2 = sdf.parse((String) modelBCCCT.getValueAt(tbl_bccBangChamCong.getSelectedRow(), 6));
+					int totalDay = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) - dayOff;
+					modelBCCCT.setValueAt(totalDay, tbl_bccBangChamCong.getSelectedRow(), 8);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		});
 
 		javax.swing.GroupLayout pn_BangChamCongLayout = new javax.swing.GroupLayout(pn_BangChamCong);
 		pn_BangChamCong.setLayout(pn_BangChamCongLayout);
@@ -4903,10 +4944,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 	private void btn_OUTActionPerformed(java.awt.event.ActionEvent evt) {
-		int[] indexs = tbl_pcNVThamGia.getSelectedRows();
-		for (int i = indexs.length - 1; i >= 0; i--) {
-			modelPCNVJCT.removeRow(indexs[i]);
+		if (tbl_pcNVThamGia.getSelectedRow() > 1) {
+			int[] indexs = tbl_pcNVThamGia.getSelectedRows();
+			for (int i = indexs.length - 1; i >= 0; i--) {
+				modelPCNVJCT.removeRow(indexs[i]);
+			}
+		} else {
+			modelPCNVJCT.removeRow(tbl_pcNVThamGia.getSelectedRow());
 		}
+
 	}
 
 	private void btn_HoanTatActionPerformed(java.awt.event.ActionEvent evt) {
@@ -5558,7 +5604,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 			}
 		}
 	}
-	
+
 	private void getTotalDay(String id) throws SQLException {
 		int i = 1;
 		List<PhanCongNhanVien> list = phanCong_DAO.getPCNVTheoMaNV(id);
