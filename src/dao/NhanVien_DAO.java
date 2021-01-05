@@ -282,5 +282,24 @@ public class NhanVien_DAO {
 		}
 		return n > 0;
 	}
+	public String sinhMaNVTuDong() throws SQLException {
+		String count = null;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		String sql = "select COUNT(tbl_NhanVien.maNhanVien) from tbl_NhanVien";
+		Statement statement;
+		try {
+			statement = con.createStatement();
+			ResultSet res = statement.executeQuery(sql);
+			res.next();
+			count = res.getInt(1) + 1 + "";
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		for (int i = 0; i <= 3 - count.split("").length; i++) {
+			count = "0" + count;
+		}
+		return "HNVNV" + count;
+	}
 
 }

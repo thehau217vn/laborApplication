@@ -16,7 +16,7 @@ public class ChucVu_DAO {
 		try {
 			ConnectDB.getInstance();
 			Connection con = ConnectDB.getConnect();
-			String sql = "SELECT * FROM tbl_ChucVu;";
+			String sql = "SELECT * FROM tbl_ChucVu ORDER BY [maChucVu];";
 			Statement statement = con.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
@@ -91,6 +91,26 @@ public class ChucVu_DAO {
 		}
 
 		return dsCV;
+	}
+	public String sinhMaChucVuTuDong() throws SQLException {
+		String count = null;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		String sql = "select COUNT(chucVu.MaChucVu)\r\n" + 
+				"from tbl_ChucVu chucVu";
+		Statement statement;
+		try {
+			statement = con.createStatement();
+			ResultSet res = statement.executeQuery(sql);
+			res.next();
+			count = res.getInt(1) + 1 + "";
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		for (int i = 0; i <= 3 - count.split("").length ; i++) {
+			count = "0" + count;
+		}
+		return "HNVRL" + count;
 	}
 
 	public boolean addChucVu(ChucVu chucVu) throws SQLException {

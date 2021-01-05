@@ -12,6 +12,21 @@ CREATE TABLE tbl_PhongBan
 	moTa NVARCHAR(90) NOT NULL
 )
 
+
+CREATE TABLE tbl_ChucVu
+(
+	maChucVu VARCHAR(8) NOT NULL,
+	tenChucVu NVARCHAR(40) NOT NULL PRIMARY KEY,
+	moTa NVARCHAR(90) NOT NULL,
+)
+
+CREATE TABLE tbl_CongViec
+(
+	maCongViec VARCHAR(8) NOT NULL,
+	tenCongViec NVARCHAR(40) NOT NULL PRIMARY KEY,
+	moTa NVARCHAR(90) NOT NULL,
+)
+
 CREATE TABLE tbl_NhanVien
 (
 	maNhanVien VARCHAR(8) NOT NULL PRIMARY KEY,
@@ -21,7 +36,7 @@ CREATE TABLE tbl_NhanVien
 	soCMND VARCHAR(13) NOT NULL,
 	diaChi NVARCHAR(90) NOT NULL,
 	soDT VARCHAR(10) NOT NULL,
-	tenChucVu NVARCHAR(40) NOT NULL,
+	tenChucVu NVARCHAR(40) NOT NULL FOREIGN KEY REFERENCES tbl_ChucVu(tenChucVu),
 	maPhongBan VARCHAR(8) NOT NULL FOREIGN KEY REFERENCES tbl_PhongBan(maPhongBan)
 )
 
@@ -44,21 +59,6 @@ CREATE TABLE tbl_TaiKhoan
 	matKhau VARCHAR(40) NOT NULL
 )
 
-
-CREATE TABLE tbl_ChucVu
-(
-	maChucVu VARCHAR(8) NOT NULL PRIMARY KEY,
-	tenChucVu NVARCHAR(40) NOT NULL,
-	moTa NVARCHAR(90) NOT NULL
-)
-
-CREATE TABLE tbl_CongViec
-(
-	maCongViec VARCHAR(8) NOT NULL PRIMARY KEY,
-	tenCongViec NVARCHAR(40) NOT NULL,
-	moTa NVARCHAR(90) NOT NULL
-)
-
 CREATE TABLE tbl_BangChamCong
 (
 	maCongTrinh VARCHAR(8) NOT NULL REFERENCES tbl_CongTrinh(maCongTrinh),
@@ -71,9 +71,9 @@ CREATE TABLE tbl_BangChamCong
 
 CREATE TABLE tbl_PhanCongNhanVien
 (
-	maNhanVien VARCHAR(8) NOT NULL,
+	maNhanVien VARCHAR(8) NOT NULL FOREIGN KEY REFERENCES tbl_NhanVien(maNhanVien),
 	maCongTrinh VARCHAR(8) NOT NULL,
-	tenCongViec NVARCHAR(40) NOT NULL,
+	tenCongViec NVARCHAR(40) NOT NULL FOREIGN KEY REFERENCES tbl_CongViec(tenCongViec),
 	ngayBatDau DATE NOT NULL,
 	ngayKetThuc DATE NOT NULL,
 	PRIMARY KEY CLUSTERED (maNhanVien ASC, maCongTrinh ASC)
@@ -124,7 +124,8 @@ INSERT INTO [dbo].[tbl_ChucVu] ([maChucVu], [tenChucVu], [moTa]) VALUES
 --Cong Viec 
 --(!) maCongViec (EX: HNVCV001)
 
-SELECT * FROM tbl_CongViec
+SELECT * FROM tbl_CongViec ORDER By maCongViec
+select COUNT(tbl_CongViec.maCongViec) from tbl_CongViec
 
 GO
 INSERT INTO [dbo].[tbl_CongViec] ([maCongViec], [tenCongViec], [moTa]) VALUES
@@ -275,7 +276,7 @@ VALUES(N'HNVCC002', N'HNVCT002', N'HNVNV002', N'Ngô Đại Quyền', N'Bảo V�
 SELECT * FROM tbl_NhanVien
 
 GO
-INSERT INTO [dbo].[tbl_NhanVien] ([maNhanVien], [tenNhanVien], [ngaySinh], [gioiTinh], [soCMND], [diaChi], [soDT], [tenChucVu], [maPhongBan]) VALUES
+INSERT INTO [dbo].[tbl_NhanVien] ([maNhanVien], [tenNhanVien], [ngaySinh], [gioiTinh], [soCMND], [diaChi], [soDT], [tenChucVu], [maPhongBan]) VALUES 
 (N'HNVNV001', N'Lê Quang Nhật', N'2000-1-1', 1, N'215507011', N'36 Lý Thường Kiệt, Phường 7, Quận Gò Vấp, Thành phố Hồ Chí Minh', N'0852774275', N'Kế Toán', N'HNVPB001'),
 (N'HNVNV002', N'Lê Thị Hoa', N'1998-2-8', 0, N'215507012', N'20 Quang Trung, Phường 4, Quận Gò Vấp, Thành phố Hồ Chí Minh', N'0852417474', N'Kế Toán', N'HNVPB001'),
 (N'HNVNV003', N'Nguyễn Văn Vương', N'1997-1-1', 1, N'215507013', N'32 Bạch Đằng, Phường 7, Thành phố Quy Nhơn, Tỉnh Bình Định', N'0754278724', N'Kế Toán', N'HNVPB001'),
@@ -324,7 +325,7 @@ INSERT INTO [dbo].[tbl_NhanVien] ([maNhanVien], [tenNhanVien], [ngaySinh], [gioi
 (N'HNVNV046', N'Lê Tuyết Vi', N'1990-8-9', 0, N'2155070156', N'40 Bàn Cờ, Phường 3, Quận 2, Thành phố Hồ Chí Minh', N'0147951357', N'Quản Lý Công Trường', N'HNVPB008'),
 (N'HNVNV047', N'Lê Thị Giang', N'1993-1-8', 0, N'215507057', N'32 Cao Thắng, Phường 6, Quận Gò Vấp, Thành phố Hồ Chí Minh', N'0357951897', N'Chuyên Viên Phân Tích', N'HNVPB004'),
 (N'HNVNV048', N'Ngô Ái Tuyết Vy', N'1993-1-8', 0, N'215507058', N'52 Nguyễn Oanh, Phường 8, Quận 9, Thành phố Hồ Chí Minh', N'0258963357', N'Chuyên Viên Phân Tích', N'HNVPB004'),
-(N'HNVNV049', N'Nguyễn Ngọc Diễm', N'1993-1-8', 0, N'215507059', N'62 Phạm Hùng, Phường 11, Quận 6, Thành phố Hồ chí Minh', N'0951753654', N'KChuyên Viên Phân Tích', N'HNVPB004'),
+(N'HNVNV049', N'Nguyễn Ngọc Diễm', N'1993-1-8', 0, N'215507059', N'62 Phạm Hùng, Phường 11, Quận 6, Thành phố Hồ chí Minh', N'0951753654', N'Chuyên Viên Phân Tích', N'HNVPB004'),
 (N'HNVNV050', N'Nguyễn Bửu Lý', N'1993-1-8', 1, N'215507060', N'25 Trần Hưng Đạo, Phường 1, Quận 1, Thành phố Hồ Chí Minh', N'0159753258', N'Chuyên Viên Phân Tích', N'HNVPB004'),
 (N'HNVNV051', N'Lê Quang Huy', N'2000-1-1', 1, N'215507061', N'205 Lê Đức Thọ, Phường 3, Quận Gò Vấp, Thành phố Hồ Chí Minh', N'0147852684', N'Chuyên Viên Phân Tích', N'HNVPB004'),
 (N'HNVNV052', N'Nguyễn Văn Hiệu', N'1998-2-8', 1, N'215507062', N'63 Võ Thị Sáu, Phường 9, Quận Tân Bình, Thành phố Hồ Chí Minh', N'0258417963', N'Chuyên Viên Marketing', N'HNVPB004'),
@@ -361,8 +362,8 @@ INSERT INTO [dbo].[tbl_NhanVien] ([maNhanVien], [tenNhanVien], [ngaySinh], [gioi
 (N'HNVNV083', N'Nguyễn Văn Việt', N'1997-1-1', 1, N'215507093', N'63 Bào Li, Phường 9, Thành phố Huế, Tỉnh Thừa Thiên Huế',  N'0785964523', N'Lao Động', N'HNVPB002'),
 (N'HNVNV084', N'Nguyễn Công Phượng', N'2000-07-21', 1, N'215507094', N'89 Bảo Hi, Phường 5, Thành phố Huế, Tỉnh Thừa Thiên Huế',  N'0484563152', N'Lao Động', N'HNVPB002'),
 (N'HNVNV085', N'Phạm Ngọc Trang', N'1990-3-8', 0, N'215507095', N'100 Lộc, Phường 4, Thành phố Huế, Tỉnh Thừa Thiên Huế',  N'0978546457', N'Lao Động', N'HNVPB002'),
-(N'HNVNV086', N'Lê Thanh Hảo', N'1990-8-9', 0, N'2155070196', N'200 Quang Trí, Phường 3, Thành phố Quảng Ngãi, TỈnh Quảng Ngãi', N'033216677', N'Lao Động', N'HNVPB002'),
-(N'HNVNV087', N'Trần Văn Long', N'1993-1-8', 1, N'215507097', N'152 Trú Tòa, Phường 6, Thành phố Quảng Nam, TỈnh Quảng Nam', N'0332167206', N'Lao Động', N'HNVPB002'),
+(N'HNVNV086', N'Lê Thanh Hảo', N'1990-8-9', 0, N'2155070196', N'200 Quang Trí, Phường 3, Thành phố Quảng Ngãi, Tỉnh Quảng Ngãi', N'033216677', N'Lao Động', N'HNVPB002'),
+(N'HNVNV087', N'Trần Văn Long', N'1993-1-8', 1, N'215507097', N'152 Trú Tòa, Phường 6, Thành phố Quảng Nam, Tỉnh Quảng Nam', N'0332167206', N'Lao Động', N'HNVPB002'),
 (N'HNVNV088', N'Nguyễn Trọng Phụng', N'1993-1-8', 1, N'215507098', N'256 Nguyễn Oanh, Phường 11, Thành phố Thanh Hóa, TỈnh Thanh Hóa', N'0303216226', N'Lao Động', N'HNVPB002'),
 (N'HNVNV089', N'Trần Bảo Oanh', N'1993-1-8', 0, N'215507099', N'9 Lê Lợi, Phường 2, Thành phố Hà Tĩnh, Tỉnh Hà Tĩnh', N'045678964', N'Lao Động', N'HNVPB002'),
 (N'HNVNV090', N'Cao Thị Thanh', N'1993-1-8', 0, N'215517017', N'523 Bình Nghĩa, Phường 9, Thành phố Hà Tĩnh, Tỉnh Hà Tĩnh', N'0456898546', N'Lao Động', N'HNVPB002'),

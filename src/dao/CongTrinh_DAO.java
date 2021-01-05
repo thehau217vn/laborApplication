@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import connectDB.ConnectDB;
 import entity.CongTrinh;
+import entity.NhanVien;
 
 public class CongTrinh_DAO {
 	public ArrayList<CongTrinh> getAllCongTrinh() {
@@ -79,6 +80,46 @@ public class CongTrinh_DAO {
 
 		return dsCT;
 	}
+	public ArrayList<CongTrinh> getCongTrinhTheoLH(String id) throws SQLException {
+		ArrayList<CongTrinh> dsCT = new ArrayList<CongTrinh>();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		PreparedStatement statement = null;
+		try {
+			String sql = "SELECT * FROM tbl_CongTrinh WHERE [loaiHinh] LIKE ?;";
+			statement = con.prepareStatement(sql);
+			statement.setString(1, "%" + id + "%");
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				String maCongTrinh = resultSet.getString(1);
+				String tenCongTrinh = resultSet.getString(2);
+				String diaDiem = resultSet.getString(3);
+				String loaiHinh = resultSet.getString(4);
+				int giayPhepSo = resultSet.getInt(5);
+				String ngayCapPhep = resultSet.getString(6);
+				String ngayKhoiCong = resultSet.getString(7);
+				String ngayHoanThanh = resultSet.getString(8);
+				boolean trangThai = resultSet.getBoolean(9);
+				CongTrinh congTrinh = new CongTrinh(maCongTrinh, tenCongTrinh, diaDiem, loaiHinh, giayPhepSo,
+						ngayCapPhep, ngayKhoiCong, ngayHoanThanh, trangThai);
+				dsCT.add(congTrinh);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}
+
+		return dsCT;
+	}
+
 
 	public ArrayList<CongTrinh> getCongTrinhTheoTenCT(String id) throws SQLException {
 		ArrayList<CongTrinh> dsCT = new ArrayList<CongTrinh>();

@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.security.PublicKey;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -153,6 +154,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		txt_nvTimTenNV = new javax.swing.JTextField();
 		lbl_TimMaNV = new javax.swing.JLabel();
 		txt_nvTimMaNV = new javax.swing.JTextField();
+		
 		lblTimNV = new javax.swing.JLabel();
 		cbb_nvTimPB = new javax.swing.JComboBox<>();
 		lbl_TimChucVu = new javax.swing.JLabel();
@@ -163,6 +165,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		cbb_nvChonPB = new javax.swing.JComboBox<>();
 		lbl_MaNV = new javax.swing.JLabel();
 		txt_nvMaNV = new javax.swing.JTextField();
+		//txt_nvMaNV.setEditable(false);
 		lbl_TenNV = new javax.swing.JLabel();
 		txt_nvTenNV = new javax.swing.JTextField();
 		lbl_CMND = new javax.swing.JLabel();
@@ -202,6 +205,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_TenPB = new javax.swing.JLabel();
 		lbl_Hotline = new javax.swing.JLabel();
 		txt_pbMaPB = new javax.swing.JTextField();
+		txt_pbMaPB.setEditable(false);
 		txt_pbTenPB = new javax.swing.JTextField();
 		txt_pbHotline = new javax.swing.JTextField();
 		lbl_GhiChu = new javax.swing.JLabel();
@@ -266,6 +270,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_TenCongViec = new javax.swing.JLabel();
 		txt_cvTenCV = new javax.swing.JTextField();
 		txt_cvMaCV = new javax.swing.JTextField();
+		txt_cvMaCV.setEditable(false);
 		btn_LuuCV = new javax.swing.JButton();
 		btn_XoaCV = new javax.swing.JButton();
 		btn_XoaTrangCV = new javax.swing.JButton();
@@ -281,6 +286,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_cvThemChucVu = new javax.swing.JLabel();
 		lbl_MaChucVu = new javax.swing.JLabel();
 		txt_cvMaChV = new javax.swing.JTextField();
+		txt_cvMaChV.setEditable(false);
 		lbl_TenChucVu = new javax.swing.JLabel();
 		txt_cvTenChV = new javax.swing.JTextField();
 		lbl_MoTaChucVu = new javax.swing.JLabel();
@@ -1427,11 +1433,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 
-				int row = tbl_QLPB.getSelectedRow();
-				txt_pbMaPB.setText(modelPB.getValueAt(row, 1).toString());
-				txt_pbTenPB.setText(modelPB.getValueAt(row, 2).toString());
-				txt_pbHotline.setText(modelPB.getValueAt(row, 3).toString());
-				txt_pbMoTa.setText(modelPB.getValueAt(row, 4).toString());
 
 			}
 
@@ -1447,6 +1448,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				int row = tbl_QLPB.getSelectedRow();
+				txt_pbMaPB.setText(modelPB.getValueAt(row, 1).toString());
+				txt_pbTenPB.setText(modelPB.getValueAt(row, 2).toString());
+				txt_pbHotline.setText(modelPB.getValueAt(row, 3).toString());
+				txt_pbMoTa.setText(modelPB.getValueAt(row, 4).toString());
 
 			}
 		});
@@ -1489,8 +1495,30 @@ public class QLLD_Application extends javax.swing.JFrame {
 			}
 		});
 
-		cbb_pbTimMaPB.setModel(
-				new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+		cbb_pbTimMaPB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã Phòng Ban" }));
+		try {
+			Connection con = ConnectDB.getConnect();
+			String sql = "SELECT maPhongBan FROM tbl_PhongBan";
+			Statement statement = con.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				cbb_pbTimMaPB.addItem(resultSet.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		AutoCompleteDecorator.decorate(cbb_pbTimMaPB);
+		cbb_pbTimMaPB.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				try {
+					cbb_pbTimMaPBActionPerformed(evt);
+				} catch (SQLException e) {
+
+					e.printStackTrace();
+				}
+			}
+		});
 
 		javax.swing.GroupLayout pn_QLPhongBanLayout = new javax.swing.GroupLayout(pn_QLPhongBan);
 		pn_QLPhongBan.setLayout(pn_QLPhongBanLayout);
@@ -1669,6 +1697,13 @@ public class QLLD_Application extends javax.swing.JFrame {
 		buttonGroup2.add(Rbtn_TrangThaiCHT);
 
 		cbb_ctQuan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {}));
+		this.loadCBB_QHFCT("SELECT * FROM QuanHuyen WHERE idTP = '79'");
+		cbb_ctQuan.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				cbb_ctQuanActionPerformed(evt);
+			}
+		});
+		AutoCompleteDecorator.decorate(cbb_ctQuan);
 
 		cbb_ctPhuong.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {}));
 
@@ -1682,6 +1717,19 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_LoaiHinh.setText("Loại hình:");
 
 		cbb_ctLoaiHinhCT.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dân Dụng", "Công Nghiệp" }));
+		try {
+			Connection con = ConnectDB.getConnect();
+			String sql = "SELECT maCongTrinh FROM tbl_CongTrinh";
+			Statement statement = con.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				cbb_ctLoaiHinhCT.addItem(resultSet.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		AutoCompleteDecorator.decorate(cbb_ctLoaiHinhCT);
 
 		javax.swing.GroupLayout pn_ThemCTLayout = new javax.swing.GroupLayout(pn_ThemCT);
 		pn_ThemCT.setLayout(pn_ThemCTLayout);
@@ -1873,7 +1921,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 				javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
 
 //================================================QuanLyCongTrinh====================================================================
-		String[] headerCT = ("STT;Mã Công Trình;Tên Công Trình;Địa Chỉ;Ngày Cấp Phép;Ngày Khởi Công;Ngày Hoàn Thành;Trạng Thái")
+		String[] headerCT = ("STT;Mã Công Trình;Tên Công Trình;Địa Chỉ;Loại Hình;Giấy Phép Số;Ngày Cấp Phép;Ngày Khởi Công;Ngày Hoàn Thành;Trạng Thái")
 				.split(";");
 		modelCT = new DefaultTableModel(headerCT, 0);
 		tbl_QLCT.setModel(modelCT);
@@ -1905,14 +1953,19 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-
 				int row = tbl_QLCT.getSelectedRow();
+				String[] diaChi = modelCT.getValueAt(row, 3).toString().split(",");
 				txt_ctMaCT.setText(modelCT.getValueAt(row, 1).toString());
 				txt_ctTenCT.setText(modelCT.getValueAt(row, 2).toString());
-				txt_ctDiaChiCT.setText(modelCT.getValueAt(row, 3).toString());
+				//txt_ctDiaChiCT.setText(modelCT.getValueAt(row, 3).toString());
+				txt_ctDiaChiCT.setText(diaChi[0]);
+				cbb_ctQuan.setSelectedItem(diaChi[2]);
+				cbb_ctPhuong.setSelectedItem(diaChi[1]);
+				txt_ctSoGiayPhep.setText(modelCT.getValueAt(row, 5).toString());
+				cbb_ctLoaiHinhCT.setSelectedItem(modelCT.getValueAt(row, 4).toString());
 
 				try {
-					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 4));
+					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 6));
 					DateChooser_ctNgayCP.setDate(date);
 				} catch (ParseException e1) {
 
@@ -1920,19 +1973,19 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 
 				try {
-					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 5));
+					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 7));
 					DateChooser_ctNgayKC.setDate(date);
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
 
 				try {
-					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 6));
+					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 8));
 					DateChooser_ctNgayHT.setDate(date);
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
-				String trangThai = modelCT.getValueAt(row, 7).toString();
+				String trangThai = modelCT.getValueAt(row, 9).toString();
 				if (trangThai.equalsIgnoreCase("Đã Hoàn Thành")) {
 					Rbtn_TrangThaiDHT.setSelected(true);
 				} else {
@@ -1940,6 +1993,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 
 			}
+
 
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -1994,6 +2048,16 @@ public class QLLD_Application extends javax.swing.JFrame {
 		});
 
 		txt_ctTimMaCT.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dân Dụng", "Công Nghiệp" }));
+		cbb_ctLoaiHinhCT.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				try {
+					cbb_ctLoaiHinhCTActionPerformed(evt);
+				} catch (SQLException e) {
+
+					e.printStackTrace();
+				}
+			}
+		});
 
 		javax.swing.GroupLayout pn_QLCongTrinhLayout = new javax.swing.GroupLayout(pn_QLCongTrinh);
 		pn_QLCongTrinh.setLayout(pn_QLCongTrinhLayout);
@@ -4277,8 +4341,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 		pack();
 		setLocationRelativeTo(null);
+		getDataQLNV();
+		getDataQLCT();
 		getDataPCNVCT();
 		getDataPCNVNV();
+		getDataQLPB();
+		getDataQLCV();
+		getDataQLCVu();
+		// getDataBCC();
+		pack();
 	}
 
 	private void txt_ttcnPhongBanActionPerformed(java.awt.event.ActionEvent evt) {
@@ -4349,8 +4420,10 @@ public class QLLD_Application extends javax.swing.JFrame {
 			int rowIndex = tbl_QLChV.getSelectedRow();
 			String rowData = modelChV.getValueAt(rowIndex, 1).toString();
 			chucVu_DAO.deleteChucVu(rowData);
-			modelChV.removeRow(rowIndex);
-			JOptionPane.showMessageDialog(this, "Xóa thành công");
+			
+			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				modelChV.removeRow(rowIndex);
+			}
 		}
 	}
 
@@ -4388,7 +4461,9 @@ public class QLLD_Application extends javax.swing.JFrame {
 			String rowData = modelCV.getValueAt(rowIndex, 1).toString();
 			congViec_DAO.deleteCongViec(rowData);
 			modelCV.removeRow(rowIndex);
-			JOptionPane.showMessageDialog(this, "Xóa thành công");
+			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				modelCV.removeRow(rowIndex);
+			}
 		}
 	}
 
@@ -4443,8 +4518,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 			int rowIndex = tbl_QLCT.getSelectedRow();
 			String rowData = modelCT.getValueAt(rowIndex, 1).toString();
 			congTrinh_DAO.deleteCongTrinh(rowData);
-			modelCT.removeRow(rowIndex);
-			JOptionPane.showMessageDialog(this, "Xóa thành công");
+			
+			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				modelCT.removeRow(rowIndex);
+			}
+			
 		}
 	}
 
@@ -4488,8 +4566,10 @@ public class QLLD_Application extends javax.swing.JFrame {
 			int rowIndex = tbl_QLPB.getSelectedRow();
 			String rowData = modelPB.getValueAt(rowIndex, 1).toString();
 			phongBan_DAO.deletePhongBan(rowData);
-			modelPB.removeRow(rowIndex);
-			JOptionPane.showMessageDialog(this, "Xóa thành công");
+			
+			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				modelPB.removeRow(rowIndex);
+			}
 		}
 	}
 
@@ -4550,8 +4630,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 			int rowIndex = tbl_QLNV.getSelectedRow();
 			String rowData = modelNV.getValueAt(rowIndex, 1).toString();
 			nhanVien_DAO.deleteNhanVien(rowData);
-			modelNV.removeRow(rowIndex);
-			JOptionPane.showMessageDialog(this, "Xóa Thành Công");
+			
+			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				modelNV.removeRow(rowIndex);
+			}
+			
+			
 		}
 	}
 
@@ -4616,6 +4700,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void btn_LuuNVActionPerformed(java.awt.event.ActionEvent evt) throws HeadlessException, SQLException {
 		Object o = evt.getSource();
 		if (o.equals(btn_LuuNV)) {
+			if (validDataNV()) {
 			String maNhanVien = txt_nvMaNV.getText();
 			String tenNhanVien = txt_nvTenNV.getText();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -4644,6 +4729,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 				e.printStackTrace();
 			}
+			}
 		}
 	}
 
@@ -4651,11 +4737,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 		Object o = evt.getSource();
 		if (o.equals(btn_LuuPB)) {
 			if (validDataPB()) {
-				String maPB = txt_pbMaPB.getText();
+				//String maPB = txt_pbMaPB.getText();
 				String tenPB = txt_pbTenPB.getText();
 				String hotline = txt_pbHotline.getText();
 				String moTa = txt_pbMoTa.getText();
-				PhongBan pb = new PhongBan(maPB, tenPB, hotline, moTa);
+				PhongBan pb = new PhongBan(phongBan_DAO.sinhMaPBTuDong(), tenPB, hotline, moTa);
 
 				if (phongBan_DAO.addPhongBan(pb)) {
 					modelPB.addRow(new Object[] { tbl_QLPB.getRowCount() + 1, pb.getMaPhongBan(), pb.getTenPhongBan(),
@@ -4672,14 +4758,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 		Object o = evt.getSource();
 		if (o.equals(btn_LuuCV)) {
 			if (validDataCV()) {
-				String maCongViec = txt_cvMaCV.getText();
+				//String maCongViec = txt_cvMaCV.getText();
 				String tenCongViec = txt_cvTenCV.getText();
 				String moTa = txt_cvMoTaCV.getText();
-				CongViec congviec = new CongViec(maCongViec, tenCongViec, moTa);
-				if (congViec_DAO.addCongViec(congviec)) {
-					modelCV.addRow(new Object[] { tbl_QLCV.getRowCount() + 1, congviec.getMaCongViec(),
-							congviec.getTenCongViec(), congviec.getMoTa() });
+				CongViec congViec = new CongViec(congViec_DAO.sinhMaCongViecTuDong(), tenCongViec, moTa);
+				if (congViec_DAO.addCongViec(congViec)) {
+					modelCV.addRow(new Object[] {tbl_QLCV.getRowCount() + 1,congViec.getMaCongViec(),
+							congViec.getTenCongViec(), congViec.getMoTa() });
 					JOptionPane.showMessageDialog(this, "Thêm Thành Công!!!");
+					
 				} else {
 					return;
 				}
@@ -4687,14 +4774,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 	}
 
+
 	private void btn_LuuChVActionPerformed(java.awt.event.ActionEvent evt) throws HeadlessException, SQLException {
 		Object o = evt.getSource();
 		if (o.equals(btn_LuuChV)) {
 			if (validDataChV()) {
-				String maChucVu = txt_cvMaChV.getText();
-				String tenChucVu = txt_cvMaChV.getText();
+				//String maChucVu = txt_cvMaChV.getText();
+				String tenChucVu = txt_cvTenChV.getText();
 				String moTa = txt_cvMoTaChV.getText();
-				ChucVu chucVu = new ChucVu(maChucVu, tenChucVu, moTa);
+				ChucVu chucVu = new ChucVu(chucVu_DAO.sinhMaChucVuTuDong(), tenChucVu, moTa);
 				if (chucVu_DAO.addChucVu(chucVu)) {
 					modelChV.addRow(new Object[] { tbl_QLChV.getRowCount() + 1, chucVu.getMaChucVu(),
 							chucVu.getTenChucVu(), chucVu.getMoTa() });
@@ -4851,10 +4939,10 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void btn_pbTimPBActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		Object o = evt.getSource();
 		if (o.equals(btn_pbTimPB)) {
-			String in1 = txt_pbMaPB.getText().trim();
-			String in2 = txt_pbTenPB.getText().trim();
-			if (in1 != null && in1.trim().length() > 0) {
-				List<PhongBan> dsPB = phongBan_DAO.getPhongBanTheoMaPB(in1);
+			//String in1 = txt_pbMaPB.getText().trim();
+			String in2 = txt_pbTimTenPB.getText().trim();
+			if (in2 != null && in2.trim().length() > 0) {
+				List<PhongBan> dsPB = phongBan_DAO.getPBTheoTenPB(in2);
 				if (dsPB != null) {
 					deleteDataQLPB();
 					for (PhongBan pb : dsPB) {
@@ -4863,16 +4951,16 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 					}
 				}
-			} else if (in2 != null && in2.trim().length() > 0) {
-				List<PhongBan> dsPB = phongBan_DAO.getPhongBanTheoTenPB(in2);
-				if (dsPB != null) {
-					deleteDataQLPB();
-
-					for (PhongBan pb : dsPB) {
-						modelPB.addRow(new Object[] { modelPB.getRowCount() + 1, pb.getMaPhongBan(),
-								pb.getTenPhongBan(), pb.getHotLine(), pb.getMoTa() });
-					}
-				}
+//			} else if (in2 != null && in2.trim().length() > 0) {
+//				List<PhongBan> dsPB = phongBan_DAO.getPhongBanTheoTenPB(in2);
+//				if (dsPB != null) {
+//					deleteDataQLPB();
+//
+//					for (PhongBan pb : dsPB) {
+//						modelPB.addRow(new Object[] { modelPB.getRowCount() + 1, pb.getMaPhongBan(),
+//								pb.getTenPhongBan(), pb.getHotLine(), pb.getMoTa() });
+//					}
+//				}
 			} else {
 				deleteDataQLPB();
 				getDataQLPB();
@@ -4884,20 +4972,9 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void btn_ctTimCTActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		Object o = evt.getSource();
 		if (o.equals(btn_ctTimCT)) {
-			String in1 = txt_ctTimMaCT.getSelectedItem().toString().trim();
+			//String in1 = txt_ctTimMaCT.getSelectedItem().toString().trim();
 			String in2 = txt_ctTimTenCT.getText().trim();
-			if (in1 != null && in1.trim().length() > 0) {
-				List<CongTrinh> dsCT = congTrinh_DAO.getCongTrinhTheoMaCT(in1);
-				if (dsCT != null) {
-					deleteDataQLCT();
-					for (CongTrinh ct : dsCT) {
-						modelCT.addRow(new Object[] { modelCT.getRowCount() + 1, ct.getMaCongTrinh(),
-								ct.getTenCongTrinh(), ct.getDiaDiem(), ct.getNgayCapPhep(), ct.getNgayKhoiCong(),
-								ct.getNgayHoanThanh(), ct.isTrangThai() ? "Đã Hoàn Thành" : "Chưa Hoàn Thành" });
-					}
-				}
-
-			} else if (in2 != null && in2.trim().length() > 0) {
+			if (in2 != null && in2.trim().length() > 0) {
 				List<CongTrinh> dsCT = congTrinh_DAO.getCongTrinhTheoTenCT(in2);
 				if (dsCT != null) {
 					deleteDataQLCT();
@@ -4907,13 +4984,25 @@ public class QLLD_Application extends javax.swing.JFrame {
 								ct.getNgayHoanThanh(), ct.isTrangThai() ? "Đã Hoàn Thành" : "Chưa Hoàn Thành" });
 					}
 				}
-			}
+
+//			} else if (in2 != null && in2.trim().length() > 0) {
+//				List<CongTrinh> dsCT = congTrinh_DAO.getCongTrinhTheoTenCT(in2);
+//				if (dsCT != null) {
+//					deleteDataQLCT();
+//					for (CongTrinh ct : dsCT) {
+//						modelCT.addRow(new Object[] { modelCT.getRowCount() + 1, ct.getMaCongTrinh(),
+//								ct.getTenCongTrinh(), ct.getDiaDiem(), ct.getNgayCapPhep(), ct.getNgayKhoiCong(),
+//								ct.getNgayHoanThanh(), ct.isTrangThai() ? "Đã Hoàn Thành" : "Chưa Hoàn Thành" });
+//					}
+//				}
+//			}
 
 			else {
 				deleteDataQLCT();
 				getDataQLCT();
 			}
 
+			}
 		}
 	}
 
@@ -4944,11 +5033,32 @@ public class QLLD_Application extends javax.swing.JFrame {
 		String maPhongBan = cbb_nvTimPB.getSelectedItem().toString();
 		if (cbb_nvTimPB.getSelectedItem().toString().equalsIgnoreCase(maPhongBan)) {
 			cbb_nvTimChucVu.setSelectedIndex(0);
-			getDataTheoPB(maPhongBan);
+			getDataNVTheoPB(maPhongBan);
 			cbb_nvTimPB.setSelectedItem(maPhongBan);
 		}
 
 	}
+	private void cbb_pbTimMaPBActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+		modelPB.setRowCount(0);
+		String maPhongBan = cbb_pbTimMaPB.getSelectedItem().toString();
+		if (cbb_pbTimMaPB.getSelectedItem().toString().equalsIgnoreCase(maPhongBan)) {
+			//cbb_nvTimChucVu.setSelectedIndex(0);
+			getDataTheoPB(maPhongBan);
+			cbb_pbTimMaPB.setSelectedItem(maPhongBan);
+		}
+
+	}
+	private void cbb_ctLoaiHinhCTActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+		modelCT.setRowCount(0);
+		String maCongTrinh = cbb_ctLoaiHinhCT.getSelectedItem().toString();
+		if (cbb_ctLoaiHinhCT.getSelectedItem().toString().equalsIgnoreCase(maCongTrinh)) {
+			//cbb_nvTimChucVu.setSelectedIndex(0);
+			getDataTheoCT(maCongTrinh);
+			cbb_ctLoaiHinhCT.setSelectedItem(maCongTrinh);
+		}
+
+	}
+
 
 	private void txt_SoLuongActionPerformed(java.awt.event.ActionEvent evt) {
 	}
@@ -5072,6 +5182,13 @@ public class QLLD_Application extends javax.swing.JFrame {
 			e.printStackTrace();
 		}
 	}
+	private void cbb_ctQuanActionPerformed(ActionEvent evt) {
+		try {
+			cbbQHFCTSelectChange(evt);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void loadCBB_TP(String sql) throws SQLException {
@@ -5100,6 +5217,19 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 		this.cbb_nvQuanHuyen.setModel(modelQH);
 	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void loadCBB_QHFCT(String sql) throws SQLException {
+		DefaultComboBoxModel modelQH = new DefaultComboBoxModel();
+		ArrayList<QuanHuyen> listQH = new ArrayList<>();
+		ResultSet rsQH = ConnectDB.executeQuery(sql);
+		while (rsQH.next()) {
+			listQH.add(new QuanHuyen(rsQH.getString("idQH"), rsQH.getString("idTP"), rsQH.getString("name")));
+		}
+		for (QuanHuyen qh : listQH) {
+			modelQH.addElement(qh);
+		}
+		this.cbb_ctQuan.setModel(modelQH);
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void loadCBB_PX(String sql) throws SQLException {
@@ -5115,6 +5245,20 @@ public class QLLD_Application extends javax.swing.JFrame {
 		this.cbb_nvPhuongXa.setModel(modelPX);
 
 	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void loadCBB_PXFCT(String sql) throws SQLException {
+		ArrayList<PhuongXa> listPX = new ArrayList<>();
+		DefaultComboBoxModel modelPX = new DefaultComboBoxModel();
+		ResultSet rsPX = ConnectDB.executeQuery(sql);
+		while (rsPX.next()) {
+			listPX.add(new PhuongXa(rsPX.getString("idPX"), rsPX.getString("idQH"), rsPX.getString("name")));
+		}
+		for (PhuongXa px : listPX) {
+			modelPX.addElement(px);
+		}
+		this.cbb_ctPhuong.setModel(modelPX);
+
+	}
 
 	private void cbbTPSelectChange(ActionEvent evt) throws SQLException {
 		String TP_ID = ((TinhTP) (Object) cbb_nvThanhPho.getSelectedItem()).getIdTP().toString();
@@ -5124,6 +5268,10 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void cbbQHSelectChange(ActionEvent evt) throws SQLException {
 		String QH_ID = ((QuanHuyen) (Object) cbb_nvQuanHuyen.getSelectedItem()).getIdQH().toString();
 		loadCBB_PX("SELECT * FROM PhuongXa WHERE idQH  = " + QH_ID + "");
+	}
+	private void cbbQHFCTSelectChange(ActionEvent evt) throws SQLException {
+		String QH_ID = ((QuanHuyen) (Object) cbb_ctQuan.getSelectedItem()).getIdQH().toString();
+		loadCBB_PXFCT("SELECT * FROM PhuongXa WHERE idQH  = " + QH_ID + "");
 	}
 //============================================================Database==========================================================================
 
@@ -5150,7 +5298,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		tableModel.getDataVector().removeAllElements();
 	}
 
-	private void getDataTheoPB(String id) throws SQLException {
+	private void getDataNVTheoPB(String id) throws SQLException {
 		int i = 1;
 		List<NhanVien> list = nhanVien_DAO.getNVTheoMaPB(id);
 		if (list.size() != 0) {
@@ -5180,6 +5328,18 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void getDataQLCT() throws SQLException {
 		int i = 1;
 		List<CongTrinh> list = congTrinh_DAO.getAllCongTrinh();
+		if (list.size() != 0) {
+			for (CongTrinh ct : list) {
+				modelCT.addRow(new Object[] { i, ct.getMaCongTrinh(), ct.getTenCongTrinh(), ct.getDiaDiem(),
+						ct.getLoaiHinh(), ct.getGiayPhepSo(), ct.getNgayCapPhep(), ct.getNgayKhoiCong(),
+						ct.getNgayHoanThanh(), ct.isTrangThai() ? "Đã Hoàn Thành" : "Chưa Hoàn Thành" });
+				i++;
+			}
+		}
+	}
+	private void getDataTheoCT(String id) throws SQLException {
+		int i = 1;
+		List<CongTrinh> list = congTrinh_DAO.getCongTrinhTheoLH(id);
 		if (list.size() != 0) {
 			for (CongTrinh ct : list) {
 				modelCT.addRow(new Object[] { i, ct.getMaCongTrinh(), ct.getTenCongTrinh(), ct.getDiaDiem(),
@@ -5233,6 +5393,18 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 	}
 
+	private void getDataTheoPB(String id) throws SQLException {
+		int i = 1;
+		List<PhongBan> list = phongBan_DAO.getPBTheoMaPB(id);
+		if (list.size() != 0) {
+			for (PhongBan pb : list) {
+				modelPB.addRow(
+						new Object[] { i, pb.getMaPhongBan(), pb.getTenPhongBan(), pb.getHotLine(), pb.getMoTa() });
+				i++;
+			}
+		}
+	}
+	
 	private void getDataQLPB() throws SQLException {
 		int i = 1;
 		List<PhongBan> list = phongBan_DAO.getAllPhongBan();
@@ -5385,27 +5557,107 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 //===========================================CheckValidData==========================================
+	private boolean validDataNV() {
+		String phongBan = cbb_nvChonPB.getSelectedItem().toString();
+		String 
+ = cbb_nvChonChV.getSelectedItem().toString();
+		String tenNV = txt_nvTenNV.getText().trim();
+		Date ngaySinh;
+		ngaySinh = DateChooser_NamSinh.getDate();
+		String CMND = txt_nvCMND.getText().trim();
+		String sDT = txt_nvSDT.getText().trim();
+		String Tinh = cbb_nvThanhPho.getSelectedItem().toString();
+		String Quan = cbb_nvQuanHuyen.getSelectedItem().toString();
+		String Phuong = cbb_nvPhuongXa.getSelectedItem().toString();
+		String diaChi = txt_nvDiaChiNV.getText().trim();
+		if (cbb_nvChonPB.getSelectedIndex() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Phòng Ban Không Được Để Trống ");
+			return false;
+
+		}
+		if (cbb_nvChonChV.getSelectedIndex() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Chức Vụ Không Được Để Trống ");
+			return false;
+
+		}
+		if (txt_nvTenNV.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Tên Nhân Viên Không Được Để Trống ");
+			return false;
+
+		}
+		if (ngaySinh == null) {
+			JOptionPane.showMessageDialog(null, "Error:Ngày Sinh Không Được Để Trống ");
+			return false;
+		}
+		if(!(CMND.length()>0 && CMND.matches("\\d{8}"))) {
+			JOptionPane.showMessageDialog(this,"Error: Số CMND Phải Đủ 8 Số");
+			return false;
+		}
+		if(!(sDT.length()>0 && sDT.matches("\\d{10}"))) {
+			JOptionPane.showMessageDialog(this,"Error: Số Điện Thoại Phải Đủ 10 Số");
+			return false;
+		}
+		if (cbb_nvThanhPho.getSelectedIndex() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Tỉnh/Thành Phố Không Được Để Trống ");
+			return false;
+
+		}
+		if (cbb_nvQuanHuyen.getSelectedIndex() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Quận/Huyện Không Được Để Trống ");
+			return false;
+
+		}
+		if (cbb_nvPhuongXa.getSelectedIndex() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Phường/Xã Không Được Để Trống ");
+			return false;
+
+		}
+		if (txt_nvDiaChiNV.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Địa Chỉ Không Được Để Trống ");
+			return false;
+
+		}
+		
+		return true;
+		
+	}
+	
+	
+	
+	
+	
 	private boolean validDataCT() {
-		String maCT = txt_ctMaCT.getText().trim();
 		String tenCT = txt_ctTenCT.getText().trim();
 		String diaChi = txt_ctDiaChiCT.getText().trim();
+		String loaiHinh = cbb_ctLoaiHinhCT.getSelectedItem().toString();
+		String tempSGP = txt_ctSoGiayPhep.getText();
+		int giayPhepSo = Integer.parseInt(tempSGP);
 		Date dateCP, dateKC, dateHT;
 		dateCP = DateChooser_ctNgayCP.getDate();
 		dateKC = DateChooser_ctNgayKC.getDate();
 		dateHT = DateChooser_ctNgayHT.getDate();
+		
+		boolean trangThai = Rbtn_TrangThaiDHT.isSelected();
 
-		if (!(maCT.length() > 0 && maCT.matches("HNVCT\\d{0,3}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Mã Công Trình phải bắt đầu là HNVCT và tối đa là 3 số ");
-			return false;
-		}
-		if (!(tenCT.length() > 0 && tenCT.matches("[[A-Za-z] \\s]{1,20}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Tên Công Trình không có ký tự đặc biệt và tối đa là 20 chữ ");
+		if (txt_ctTenCT.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Tên Công Trình Không Được Để Trống ");
 			return false;
 
 		}
-		if (!(diaChi.length() > 0 && diaChi.matches("[[A-Za-z0-9] \\s]{1,20}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Địa chỉ không có ký tự đặc biệt và tối đa 20 chữ số ");
+		if (txt_ctDiaChiCT.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Địa Chỉ, Số Nhà, Tên Đường Không Được Để Trống ");
 			return false;
+
+		}
+		if (loaiHinh == null) {
+			JOptionPane.showMessageDialog(null, "Error:Loại Hình Không Được Để Trống ");
+			return false;
+
+		}
+		if (txt_ctSoGiayPhep.getText().length() >0) {
+			JOptionPane.showMessageDialog(null, "Error:Số Giấy Phép Không Được Để Trống Và Lớn Hơn 0 ");
+			return false;
+
 		}
 		if (dateCP == null) {
 			JOptionPane.showMessageDialog(this, "Error: Chọn ngày cấp phép");
@@ -5427,22 +5679,22 @@ public class QLLD_Application extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Eror: Ngày khởi công phải trước ngày hoàn thành");
 			return false;
 		}
+		if (trangThai) {
+			JOptionPane.showMessageDialog(null, "Error:Trạng Thái Không Được Để Trống ");
+			return false;
+
+		}
 		return true;
 
 	}
 
 	private boolean validDataPB() {
-
-		String maPB = txt_pbMaPB.getText().trim();
 		String tenPB = txt_pbTenPB.getText().trim();
 		String hotLine = txt_pbHotline.getText().trim();
 		String moTa = txt_pbMoTa.getText().trim();
-		if (!(maPB.length() > 0 && maPB.matches("HNVPB\\d{0,3}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Mã phòng ban phải bắt đầu là HNVPB và tối đa là 3 số ");
-			return false;
-		}
-		if (!(tenPB.length() > 0 && tenPB.matches("[[A-Za-z] \\s]{1,20}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Tên phòng ban không có ký tự đặc biệt và tối đa là 20 chữ ");
+	
+		if (txt_pbTenPB.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Tên Phòng Ban Không Được Để Trống ");
 			return false;
 
 		}
@@ -5450,53 +5702,44 @@ public class QLLD_Application extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Error: Số điện thoại phải đủ 10 số ");
 			return false;
 		}
-		if (!(moTa.length() > 0 && moTa.matches("[[A-Za-z] \\s]{1,40}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Mô tả không có ký tự đặc biệt và tối đa là 40 chữ cái");
+		if (txt_pbMoTa.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Mô Tả Không Được Để Trống ");
 			return false;
+
 		}
 		return true;
 	}
 
 	private boolean validDataChV() {
-
-		String maCVu = txt_cvMaChV.getText().trim();
 		String tenCVu = txt_cvTenChV.getText().trim();
 		String moTa = txt_cvMoTaChV.getText().trim();
-		if (!(maCVu.length() > 0 && maCVu.matches("HNVRL\\d{0,3}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Mã chức vụ phải bắt đầu là HNVCV và tối đa là 3 số ");
+		if (txt_cvTenChV.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Tên Chức Vụ Không Được Để Trống ");
 			return false;
+
 		}
-		if (!(tenCVu.length() > 0 && tenCVu.matches("[[A-Za-z0-9] \\s]{1,20}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Tên chức vụ không có ký tự đặc biệt và tối đa là 20 chữ cái ");
+		if (txt_cvMoTaChV.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Mô Tả Chức Vụ Không Được Để Trống ");
 			return false;
-		}
-		if (!(moTa.length() > 0 && moTa.matches("[[A-Za-z0-9] \\s]{1,30}"))) {
-			JOptionPane.showMessageDialog(this,
-					"Error: Mô tả chức vụ không có ký tự đặc biệt và tối đa là 40 chữ cái ");
-			return false;
+
 		}
 
 		return true;
 	}
 
 	private boolean validDataCV() {
-
-		String maCV = txt_cvMaCV.getText().trim();
 		String tenCV = txt_cvTenCV.getText().trim();
 		String moTa = txt_cvMoTaCV.getText().trim();
-		if (!(maCV.length() > 0 && maCV.matches("HNVCV\\d{0,3}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Mã công việc phải bắt đầu là HNVCV và tối đa là 3 số ");
+	
+		if (txt_cvTenCV.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Tên Công Việc Không Được Để Trống ");
 			return false;
+
 		}
-		if (!(tenCV.length() > 0 && tenCV.matches("[[A-Za-z] \\s]{1,20}"))) {
-			JOptionPane.showMessageDialog(this,
-					"Error: Tên công việc không có ký tự đặc biệt và tối đa là 20 chữ cái ");
+		if (txt_cvMoTaCV.getText().length() == 0) {
+			JOptionPane.showMessageDialog(null, "Error:Mô Tả Công Việc Không Được Để Trống ");
 			return false;
-		}
-		if (!(moTa.length() > 0 && moTa.matches("[[A-Za-z] \\s]{1,30}"))) {
-			JOptionPane.showMessageDialog(this,
-					"Error: Mô tả công việc không có ký tự đặc biệt và tối đa là 40 chữ cái ");
-			return false;
+
 		}
 
 		return true;
@@ -5798,6 +6041,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private javax.swing.JTextField txt_ctMaCT;
 	private javax.swing.JTextField txt_ctSoGiayPhep;
 	private javax.swing.JTextField txt_ctSoGiayPhep1;
+	private javax.swing.JTextField txt_ctTrangThai;
 	private javax.swing.JTextField txt_ctTenCT;
 	private javax.swing.JComboBox<String> txt_ctTimMaCT;
 	private javax.swing.JTextField txt_ctTimTenCT;

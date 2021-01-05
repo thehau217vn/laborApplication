@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import connectDB.ConnectDB;
+
 import entity.PhongBan;
 
 public class PhongBan_DAO {
@@ -35,38 +36,38 @@ public class PhongBan_DAO {
 	
 	
 
-	public ArrayList<PhongBan> getTheoMaPB(String id) throws SQLException {
-		ArrayList<PhongBan> dsPB = new ArrayList<PhongBan>();
-		ConnectDB.getInstance();
-		Connection con = ConnectDB.getConnect();
-		PreparedStatement statement = null;
-		try {
-			String sql = "SELECT * FROM tbl_PhongBan WHERE [maPhongBan] = ?;";
-			statement = con.prepareStatement(sql);
-			statement.setString(1, id);
-			ResultSet resultSet = statement.executeQuery();
+//	public ArrayList<PhongBan> getTheoMaPB(String id) throws SQLException {
+//		ArrayList<PhongBan> dsPB = new ArrayList<PhongBan>();
+//		ConnectDB.getInstance();
+//		Connection con = ConnectDB.getConnect();
+//		PreparedStatement statement = null;
+//		try {
+//			String sql = "SELECT * FROM tbl_PhongBan WHERE [maPhongBan] = ?;";
+//			statement = con.prepareStatement(sql);
+//			statement.setString(1, id);
+//			ResultSet resultSet = statement.executeQuery();
+//
+//			while (resultSet.next()) {
+//				String maPhongBan = resultSet.getString(1);
+//				String tenPhongBan = resultSet.getString(2);
+//				String hotLine = resultSet.getString(3);
+//				String moTa = resultSet.getString(4);
+//				PhongBan phongBan = new PhongBan(maPhongBan, tenPhongBan, hotLine, moTa);
+//				dsPB.add(phongBan);
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				statement.close();
+//			} catch (SQLException e2) {
+//				e2.printStackTrace();
+//			}
+//		}
+//		return dsPB;
+//	}
 
-			while (resultSet.next()) {
-				String maPhongBan = resultSet.getString(1);
-				String tenPhongBan = resultSet.getString(2);
-				String hotLine = resultSet.getString(3);
-				String moTa = resultSet.getString(4);
-				PhongBan phongBan = new PhongBan(maPhongBan, tenPhongBan, hotLine, moTa);
-				dsPB.add(phongBan);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				statement.close();
-			} catch (SQLException e2) {
-				e2.printStackTrace();
-			}
-		}
-		return dsPB;
-	}
-
-	public ArrayList<PhongBan> getPhongBanTheoMaPB(String id) throws SQLException {
+	public ArrayList<PhongBan> getPBTheoMaPB(String id) throws SQLException {
 		ArrayList<PhongBan> dsPB = new ArrayList<PhongBan>();
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnect();
@@ -85,6 +86,38 @@ public class PhongBan_DAO {
 				dsPB.add(phongBan);
 			}
 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}
+
+		return dsPB;
+	}
+	public ArrayList<PhongBan> getPBTheoTenPB(String id) throws SQLException {
+		ArrayList<PhongBan> dsPB = new ArrayList<PhongBan>();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		PreparedStatement statement = null;
+		try {
+			String sql = "SELECT * FROM tbl_PhongBan WHERE [tenPhongBan] LIKE ?;";
+			statement = con.prepareStatement(sql);
+			statement.setString(1, "%" + id + "%");
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				String maPhongBan = resultSet.getString(1);
+				String tenPhongBan = resultSet.getString(2);
+				String hotLine = resultSet.getString(3);
+				String moTa = resultSet.getString(4);
+				PhongBan phongBan = new PhongBan(maPhongBan, tenPhongBan, hotLine, moTa);
+				dsPB.add(phongBan);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -98,37 +131,38 @@ public class PhongBan_DAO {
 		return dsPB;
 	}
 	
-	public ArrayList<PhongBan> getPhongBanTheoTenPB(String id) throws SQLException {
-		ArrayList<PhongBan> dsPB = new ArrayList<PhongBan>();
-		ConnectDB.getInstance();
-		Connection con = ConnectDB.getConnect();
-		PreparedStatement statement = null;
-		try {
-			String sql = "SELECT * FROM tbl_PhongBan WHERE [maPhongBan] = ?";
-			statement = con.prepareStatement(sql);
-			statement.setString(1, id);
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				String maPhongBan = resultSet.getString(1);
-				String tenPhongBan = resultSet.getString(2);
-				String hotLine = resultSet.getString(3);
-				String moTa = resultSet.getString(4);
-				PhongBan phongBan = new PhongBan(maPhongBan, tenPhongBan, hotLine, moTa);
-				dsPB.add(phongBan);
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				statement.close();
-			} catch (SQLException e2) {
-				e2.printStackTrace();
-			}
-		}
-
-		return dsPB;
-	}
+	
+//	public ArrayList<PhongBan> getPhongBanTheoTenPB(String id) throws SQLException {
+//		ArrayList<PhongBan> dsPB = new ArrayList<PhongBan>();
+//		ConnectDB.getInstance();
+//		Connection con = ConnectDB.getConnect();
+//		PreparedStatement statement = null;
+//		try {
+//			String sql = "SELECT * FROM tbl_PhongBan WHERE [maPhongBan] = ?";
+//			statement = con.prepareStatement(sql);
+//			statement.setString(1, id);
+//			ResultSet resultSet = statement.executeQuery();
+//			while (resultSet.next()) {
+//				String maPhongBan = resultSet.getString(1);
+//				String tenPhongBan = resultSet.getString(2);
+//				String hotLine = resultSet.getString(3);
+//				String moTa = resultSet.getString(4);
+//				PhongBan phongBan = new PhongBan(maPhongBan, tenPhongBan, hotLine, moTa);
+//				dsPB.add(phongBan);
+//			}
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				statement.close();
+//			} catch (SQLException e2) {
+//				e2.printStackTrace();
+//			}
+//		}
+//
+//		return dsPB;
+//	}
 
 	public boolean addPhongBan(PhongBan phongBan) throws SQLException {
 		ConnectDB.getInstance();
@@ -201,5 +235,24 @@ public class PhongBan_DAO {
 			}
 		}
 		return n > 0;
+	}
+	public String sinhMaPBTuDong() throws SQLException {
+		String count = null;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		String sql = "select COUNT(tbl_PhongBan.maPhongBan) from tbl_PhongBan";
+		Statement statement;
+		try {
+			statement = con.createStatement();
+			ResultSet res = statement.executeQuery(sql);
+			res.next();
+			count = res.getInt(1) + 1 + "";
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		for (int i = 0; i <= 3 - count.split("").length; i++) {
+			count = "0" + count;
+		}
+		return "HNVPB" + count;
 	}
 }
