@@ -40,7 +40,37 @@ public class NhanVien_DAO {
 		}
 		return dsNV;
 	}
+	
+	public ArrayList<NhanVien> getNhanVienInCT() {
+		ArrayList<NhanVien> dsNV = new ArrayList<NhanVien>();
+		try {
+			Connection con = ConnectDB.getConnect();
+			String sql = "SELECT tbl_NhanVien.maNhanVien, tenNhanVien, ngaySinh, gioiTinh, diaChi, soDT, tenChucVu, maPhongBan FROM tbl_NhanVien JOIN tbl_PhanCongNhanVien "
+					+ "ON tbl_PhanCongNhanVien.maNhanVien = tbl_NhanVien.maNhanVien;";
+			Statement statement = con.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
 
+			while (resultSet.next()) {
+				String maNhanVien = resultSet.getString(1);
+				String tenNhanVien = resultSet.getString(2);
+				String ngaySinh = resultSet.getString(3);
+				boolean gioiTinh = resultSet.getBoolean(4);
+				String soCMND = resultSet.getString(5);
+				String diaChi = resultSet.getString(6);
+				String soDT = resultSet.getString(7);
+				String chucVu = resultSet.getString(8);
+				String maPhongBan = resultSet.getString(9);
+				NhanVien nhanVien = new NhanVien(maNhanVien, tenNhanVien, ngaySinh, gioiTinh, soCMND, diaChi, soDT,
+						chucVu, maPhongBan);
+				dsNV.add(nhanVien);
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return dsNV;
+	}
+	
 	public ArrayList<NhanVien> getNVTheoMaNV(String id) throws SQLException {
 		ArrayList<NhanVien> dsNV = new ArrayList<NhanVien>();
 		ConnectDB.getInstance();

@@ -127,7 +127,7 @@ INSERT INTO [dbo].[tbl_ChucVu] ([maChucVu], [tenChucVu], [moTa]) VALUES
 SELECT * FROM tbl_CongViec
 
 GO
-INSERT INTO [dbo].[tbl_CongViec] ([maCongViec], [tenCongViec], [moTa]) VALUES
+INSERT INTO [dbo].[tbl_CongViec] ([maCongViec], [tenCongViec], [moTa]) VALUES 
 (N'HNVCV001', N'Giám Sát Công Trình', N'Giám Sát Công Trình'),
 (N'HNVCV002', N'Chỉ Huy CT', N'Chỉ Huy Công Trình phân chia và quản lý tiến độ công việc'),
 (N'HNVCV003', N'Làm Móng', N'Làm Móng Cho Công Trình'),
@@ -147,7 +147,13 @@ INSERT INTO [dbo].[tbl_CongViec] ([maCongViec], [tenCongViec], [moTa]) VALUES
 (N'HNVCV017', N'Lắp Đặt Hệ Thống Cửa', N'Lắp các hệ thống cửa ra vào, cửa sổ'),
 (N'HNVCV018', N'Xây Cầu Thang', N'Xây dựng cầu thang'),
 (N'HNVCV019', N'Bốc Vác', N'Bốc vác nguyên liệu và vận chuyển đến tay thợ xây'),
-(N'HNVCV020', N'Kế Toán', N'Tính lương cho nhân viên và lao động');
+(N'HNVCV020', N'Kế Toán', N'Tính lương cho nhân viên và lao động'),
+(N'HNVCV021', N'Thiết Kế Quy Hoạch', N'Khảo sát, tạo sơ đồ thiết kế'),
+(N'HNVCV022', N'Thiết Kế Nội Thất', N'Thiết kế nội thất cho công trình'),
+(N'HNVCV023', N'Giám Sát Thiết Kế', N'Giám sát thiết kế công trình'),
+(N'HNVCV024', N'Trông Coi Công Trình', N'Trông coi công trình vào giờ nghỉ trưa, ban đêm'),
+(N'HNVCV025', N'Thiết Kế Hệ Thống Điện', N'Thiết kế hệ thống điện cho công trình để lên kế hoạch đi đường điện'),
+(N'HNVCV026', N'Đổ Trụ', N'Đổ trụ để xây lên cao');
 
 
 --CONG TRINH
@@ -386,17 +392,12 @@ VALUES(N'HNVNV001', N'HNVCT001', N'Làm Móng', N'2021-1-1', N'2025-9-1')
 GO
 INSERT INTO [dbo].[tbl_PhanCongNhanVien]
 	([maNhanVien], [maCongTrinh], [tenCongViec], [ngayBatDau], [ngayKetThuc])
-VALUES(N'HNVNV002', N'HNVCT002', N'Cắt Sắt', N'2021-8-10', N'2025-2-2')
-
-GO
-INSERT INTO [dbo].[tbl_PhanCongNhanVien]
-	([maNhanVien], [maCongTrinh], [tenCongViec], [ngayBatDau], [ngayKetThuc])
 VALUES(N'HNVNV003', N'HNVCT003', N'Làm Nền', N'2021-10-2', N'2022-2-2')
 
 GO
 INSERT INTO [dbo].[tbl_PhanCongNhanVien]
 	([maNhanVien], [maCongTrinh], [tenCongViec], [ngayBatDau], [ngayKetThuc])
-VALUES(N'HNVNV999', N'HNVCT004', N'Đổ Trụ', N'2021-10-8', N'2024-2-2')
+VALUES(N'HNVNV099', N'HNVCT004', N'Đổ Trụ', N'2021-10-8', N'2024-2-2')
 
 select *
 from tbl_PhanCongNhanVien
@@ -12431,3 +12432,34 @@ INSERT INTO PhuongXa (idPX, name, idQH) VALUES
 ('75501', N'Xã Huyện Côn Đảo', '755'),
 ('90101', N'Xã Bạch Long Vĩ', '318'),
 ('c', N'Phường Đông Vĩnh', '412');
+
+
+
+
+
+
+
+
+
+
+SELECT tbl_PhanCongNhanVien.maNhanVien, tenNhanVien, ngaySinh, gioiTinh, diaChi, soDT, tenChucVu, maPhongBan FROM tbl_NhanVien JOIN tbl_PhanCongNhanVien
+ON tbl_PhanCongNhanVien.maNhanVien = tbl_NhanVien.maNhanVien
+
+
+SELECT tbl_PhanCongNhanVien.maCongTrinh, tenCongTrinh, diaDiem, tenCongViec, ngayKhoiCong, ngayKetThuc, DATEDIFF(DAY, ngayHoanThanh, ngayKetThuc) AS tongNgayCong FROM tbl_CongTrinh JOIN tbl_PhanCongNhanVien
+ON tbl_PhanCongNhanVien.maCongTrinh = tbl_CongTrinh.maCongTrinh
+WHERE tbl_PhanCongNhanVien.maNhanVien = 'HNVNV004'
+
+SELECT NV.maNhanVien, tenNhanVien, maPhongBan, tenCongViec
+FROM tbl_NhanVien NV JOIN tbl_PhanCongNhanVien PCNV
+	ON NV.maNhanVien = PCNV.maNhanVien
+WHERE maCongTrinh = N'HNVCT001'
+
+SELECT NV.maNhanVien, tenNhanVien, maPhongBan, tenCongViec
+FROM tbl_NhanVien NV JOIN tbl_PhanCongNhanVien PCNV ON NV.maNhanVien = PCNV.maNhanVien
+WHERE PCNV.maCongTrinh = N'HNVCT001'
+
+SELECT tbl_NhanVien.maNhanVien, tenNhanVien, maPhongBan, tenCongViec, ngayBatDau, ngayKetThuc
+FROM tbl_NhanVien JOIN
+	tbl_PhanCongNhanVien ON tbl_NhanVien.maNhanVien = tbl_PhanCongNhanVien.maNhanVien
+ORDER BY maNhanVien

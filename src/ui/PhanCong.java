@@ -30,8 +30,6 @@ public class PhanCong extends javax.swing.JFrame {
 	private void initComponents() {
 
 		pn_PhanCong = new javax.swing.JPanel();
-		lbl_TongNhanVien = new javax.swing.JLabel();
-		txt_TongNhanVien = new javax.swing.JTextField();
 		lbl_ChonCongViec = new javax.swing.JLabel();
 		cbb_ChonCongViec = new javax.swing.JComboBox<>();
 		btn_DongY = new javax.swing.JButton();
@@ -42,8 +40,6 @@ public class PhanCong extends javax.swing.JFrame {
 		lbl_ChonCongViec2 = new javax.swing.JLabel();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-		lbl_TongNhanVien.setText("Tổng nhân viên:");
 
 		lbl_ChonCongViec.setText("Chọn công việc:");
 
@@ -93,53 +89,39 @@ public class PhanCong extends javax.swing.JFrame {
 
 		javax.swing.GroupLayout pn_PhanCongLayout = new javax.swing.GroupLayout(pn_PhanCong);
 		pn_PhanCong.setLayout(pn_PhanCongLayout);
-		pn_PhanCongLayout
-				.setHorizontalGroup(pn_PhanCongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(pn_PhanCongLayout.createSequentialGroup().addContainerGap().addGroup(pn_PhanCongLayout
+		pn_PhanCongLayout.setHorizontalGroup(pn_PhanCongLayout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(pn_PhanCongLayout.createSequentialGroup().addContainerGap()
+						.addGroup(pn_PhanCongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addComponent(lbl_ChonCongViec).addComponent(lbl_ChonCongViec1)
+								.addComponent(lbl_ChonCongViec2))
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+						.addGroup(pn_PhanCongLayout
 								.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-								.addGroup(pn_PhanCongLayout.createSequentialGroup().addComponent(lbl_TongNhanVien)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-										.addComponent(txt_TongNhanVien, javax.swing.GroupLayout.PREFERRED_SIZE, 202,
-												javax.swing.GroupLayout.PREFERRED_SIZE))
-								.addGroup(pn_PhanCongLayout.createSequentialGroup()
-										.addGroup(pn_PhanCongLayout
-												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-												.addComponent(lbl_ChonCongViec).addComponent(lbl_ChonCongViec1)
-												.addComponent(lbl_ChonCongViec2))
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-										.addGroup(pn_PhanCongLayout
-												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-												.addComponent(pc_NgayBatDau, javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(cbb_ChonCongViec, 0, javax.swing.GroupLayout.DEFAULT_SIZE,
-														Short.MAX_VALUE)
-												.addComponent(pc_NgayKetThuc, javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-								pn_PhanCongLayout.createSequentialGroup()
-										.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(btn_DongY).addGap(18, 18, 18).addComponent(btn_HuyBo)
-										.addGap(43, 43, 43)));
+								.addComponent(pc_NgayBatDau, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+								.addComponent(cbb_ChonCongViec, 0, javax.swing.GroupLayout.DEFAULT_SIZE,
+										Short.MAX_VALUE)
+								.addComponent(pc_NgayKetThuc, javax.swing.GroupLayout.DEFAULT_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+						pn_PhanCongLayout.createSequentialGroup().addContainerGap(54, Short.MAX_VALUE)
+								.addComponent(btn_DongY).addGap(18, 18, 18).addComponent(btn_HuyBo)
+								.addGap(43, 43, 43)));
 		pn_PhanCongLayout.setVerticalGroup(pn_PhanCongLayout
 				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(pn_PhanCongLayout.createSequentialGroup().addGap(30, 30, 30)
-						.addGroup(pn_PhanCongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(lbl_TongNhanVien).addComponent(txt_TongNhanVien,
-										javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.PREFERRED_SIZE))
-						.addGap(24, 24, 24)
+				.addGroup(pn_PhanCongLayout.createSequentialGroup().addGap(52, 52, 52)
 						.addGroup(pn_PhanCongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 								.addComponent(lbl_ChonCongViec)
 								.addComponent(cbb_ChonCongViec, javax.swing.GroupLayout.PREFERRED_SIZE,
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
 						.addGap(18, 18, 18)
-						.addGroup(
-								pn_PhanCongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-										.addComponent(lbl_ChonCongViec1, javax.swing.GroupLayout.DEFAULT_SIZE,
-												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(pc_NgayBatDau, javax.swing.GroupLayout.DEFAULT_SIZE,
-												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(pn_PhanCongLayout
+								.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+								.addComponent(lbl_ChonCongViec1, javax.swing.GroupLayout.DEFAULT_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(pc_NgayBatDau, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
 						.addGap(18, 18, 18)
 						.addGroup(pn_PhanCongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 								.addComponent(pc_NgayKetThuc, javax.swing.GroupLayout.PREFERRED_SIZE,
@@ -149,7 +131,7 @@ public class PhanCong extends javax.swing.JFrame {
 						.addGap(18, 18, 18)
 						.addGroup(pn_PhanCongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 								.addComponent(btn_DongY).addComponent(btn_HuyBo))
-						.addGap(21, 21, 21)));
+						.addGap(45, 45, 45)));
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -159,7 +141,6 @@ public class PhanCong extends javax.swing.JFrame {
 		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
 				pn_PhanCong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
 				javax.swing.GroupLayout.PREFERRED_SIZE));
-
 		pack();
 		setLocationRelativeTo(null);
 
@@ -243,11 +224,9 @@ public class PhanCong extends javax.swing.JFrame {
 	private javax.swing.JLabel lbl_ChonCongViec;
 	private javax.swing.JLabel lbl_ChonCongViec1;
 	private javax.swing.JLabel lbl_ChonCongViec2;
-	private javax.swing.JLabel lbl_TongNhanVien;
 	private com.toedter.calendar.JDateChooser pc_NgayBatDau;
 	private com.toedter.calendar.JDateChooser pc_NgayKetThuc;
 	private javax.swing.JPanel pn_PhanCong;
-	private javax.swing.JTextField txt_TongNhanVien;
 	// End of variables declaration//GEN-END:variables
 
 }
