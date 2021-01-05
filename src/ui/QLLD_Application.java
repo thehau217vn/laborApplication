@@ -81,12 +81,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 	@SuppressWarnings("unused")
 	private PhanCongNhanVien_DAO phanCong_DAO = new PhanCongNhanVien_DAO();
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-
-	public QLLD_Application() throws SQLException {
+	private String concac;
+	public QLLD_Application(String cc) throws SQLException {
+		this.concac = cc;
 		initComponents();
 		setSize(1366, 768);
 		setLocationRelativeTo(null);
 		setTitle("PHẦN MỀM QUẢN LÝ LAO ĐỘNG");
+		
+		
 	}
 
 	PhanCong phanCong = new PhanCong();
@@ -4052,9 +4055,17 @@ public class QLLD_Application extends javax.swing.JFrame {
 			}
 		});
 
-		txt_ttcnTenNV.setText("ONLY VIEW");
+		txt_ttcnTenNV.setText(concac);
 
 		txt_ttcnMaNV.setText("ONLY VIEW");
+//		String check = dangNhap.check();
+//		try {
+//			Connection con = ConnectDB.getConnect();
+//			String sql = 
+//			Statement statement = con.createStatement(sql); 
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
 
 		txt_ttcnPhongBan.setText("ONLY VIEW");
 		txt_ttcnPhongBan.addActionListener(new java.awt.event.ActionListener() {
@@ -5559,8 +5570,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 //===========================================CheckValidData==========================================
 	private boolean validDataNV() {
 		String phongBan = cbb_nvChonPB.getSelectedItem().toString();
-		String 
- = cbb_nvChonChV.getSelectedItem().toString();
+		String chucVu = cbb_nvChonChV.getSelectedItem().toString();
 		String tenNV = txt_nvTenNV.getText().trim();
 		Date ngaySinh;
 		ngaySinh = DateChooser_NamSinh.getDate();
@@ -5778,7 +5788,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					new QLLD_Application().setVisible(true);
+					new QLLD_Application("cc").setVisible(true);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

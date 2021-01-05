@@ -1,5 +1,14 @@
 package ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import connectDB.ConnectDB;
+
 /**
  *
  * @author WIN10
@@ -130,11 +139,40 @@ public class DangNhap extends javax.swing.JFrame {
 						Short.MAX_VALUE));
 
 		pack();
+		
+		btn_DangNhap.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String maTK = txt_TaiKhoan.getText();
+				try {
+					QLLD_Application application = new QLLD_Application(maTK);
+					application.setVisible(true);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 	}// </editor-fold>//GEN-END:initComponents
-
-	/**
+		/**
 	 * @param args the command line arguments
+		 * @throws SQLException 
 	 */
+	
+//	public void check() throws SQLException {
+//		String maTK = txt_TaiKhoan.getText();
+//		String pass = txt_MatKhau.getText();
+//		Connection con = ConnectDB.getInstance().getConnect();
+//		PreparedStatement cac = con.prepareStatement("SELECT * FROM tbl_TaiKhoan WHERE maNhanVien = ? AND matKhau = ? ");
+//		cac.setString(1, maTK);
+//		cac.setString(2, pass);
+//		ResultSet lon = cac.executeQuery();
+//		if(lon.next()) {
+//			
+//		}
+//	}
 	public static void main(String args[]) {
 		/* Set the Nimbus look and feel */
 		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
