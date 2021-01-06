@@ -253,6 +253,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_DiaChiCT = new javax.swing.JLabel();
 		txt_ctTenCT = new javax.swing.JTextField();
 		txt_ctMaCT = new javax.swing.JTextField();
+		txt_ctMaCT.setEditable(false);
 		lbl_NgayHT = new javax.swing.JLabel();
 		lbl_NgayKC = new javax.swing.JLabel();
 		lbl_NgayCP = new javax.swing.JLabel();
@@ -1957,7 +1958,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				int row = tbl_QLCT.getSelectedRow();
-				String[] diaChi = modelCT.getValueAt(row, 3).toString().split(",");
+				String[] diaChi = modelCT.getValueAt(row, 3).toString().split(", ");
 				txt_ctMaCT.setText(modelCT.getValueAt(row, 1).toString());
 				txt_ctTenCT.setText(modelCT.getValueAt(row, 2).toString());
 				txt_ctDiaChiCT.setText(diaChi[0]);
@@ -1966,7 +1967,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 				txt_ctSoGiayPhep.setText(modelCT.getValueAt(row, 5).toString());
 				cbb_ctLoaiHinhCT.setSelectedItem(modelCT.getValueAt(row, 4).toString());
 				try {
-					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 6));
+					Date date = new SimpleDateFormat("yyyy-MM-dd").parse(modelCT.getValueAt(row, 6).toString());
 					DateChooser_ctNgayCP.setDate(date);
 				} catch (ParseException e1) {
 
@@ -1974,14 +1975,14 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 
 				try {
-					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 7));
+					Date date = new SimpleDateFormat("yyyy-MM-dd").parse(modelCT.getValueAt(row, 7).toString());
 					DateChooser_ctNgayKC.setDate(date);
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
 
 				try {
-					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 8));
+					Date date = new SimpleDateFormat("yyyy-MM-dd").parse(modelCT.getValueAt(row, 8).toString());
 					DateChooser_ctNgayHT.setDate(date);
 				} catch (ParseException e1) {
 					e1.printStackTrace();
@@ -1992,6 +1993,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 				} else {
 					Rbtn_TrangThaiCHT.setSelected(true);
 				}
+
 			}
 
 			@Override
@@ -2006,43 +2008,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
-//				int row = tbl_QLCT.getSelectedRow();
-//				txt_ctMaCT.setText(modelCT.getValueAt(row, 1).toString());
-//				txt_ctTenCT.setText(modelCT.getValueAt(row, 2).toString());
-//				String[] diaChi = modelCT.getValueAt(row, 3).toString().split(",");
-//				txt_ctDiaChiCT.setText(diaChi[0]);
-//				cbb_ctQuan.setSelectedItem(diaChi[2]);
-//				cbb_ctPhuong.setSelectedItem(diaChi[1]);
-//				txt_ctSoGiayPhep.setText(modelCT.getValueAt(row, 5).toString());
-//				cbb_ctLoaiHinhCT.setSelectedItem(modelCT.getValueAt(row, 4).toString());
-//				try {
-//					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 6));
-//					DateChooser_ctNgayCP.setDate(date);
-//				} catch (ParseException e1) {
-//
-//					e1.printStackTrace();
-//				}
-//
-//				try {
-//					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 7));
-//					DateChooser_ctNgayKC.setDate(date);
-//				} catch (ParseException e1) {
-//					e1.printStackTrace();
-//				}
-//
-//				try {
-//					Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) modelCT.getValueAt(row, 8));
-//					DateChooser_ctNgayHT.setDate(date);
-//				} catch (ParseException e1) {
-//					e1.printStackTrace();
-//				}
-//				String trangThai = modelCT.getValueAt(row, 9).toString();
-//				if (trangThai.equalsIgnoreCase("Đã Hoàn Thành")) {
-//					Rbtn_TrangThaiDHT.setSelected(true);
-//				} else {
-//					Rbtn_TrangThaiCHT.setSelected(true);
-//				}
 
 			}
 		});
@@ -4832,7 +4797,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		Object o = evt.getSource();
 		if (o.equals(btn_LuuCT)) {
 			if (validDataCT()) {
-				String maCT = txt_ctMaCT.getText();
+//				String maCT = txt_ctMaCT.getText();
 				String tenCT = txt_ctTenCT.getText();
 				String diaChi = txt_ctDiaChiCT.getText() + ", " + cbb_ctPhuong.getSelectedItem().toString() + ", "
 						+ cbb_ctQuan.getSelectedItem().toString();
@@ -4848,23 +4813,29 @@ public class QLLD_Application extends javax.swing.JFrame {
 				String ngayHT = nHT.format(DateChooser_ctNgayHT.getDate());
 				boolean trangThai = Rbtn_TrangThaiDHT.isSelected();
 
-				CongTrinh ct = new CongTrinh(maCT, tenCT, diaChi, loaiHinh, giayPhepSo, ngayCP, ngayKC, ngayHT,
-						trangThai);
+				CongTrinh ct = new CongTrinh(congTrinh_DAO.sinhMaCTTuDong(), tenCT, diaChi, loaiHinh, giayPhepSo,
+						ngayCP, ngayKC, ngayHT, trangThai);
+				try {
 
-				if (congTrinh_DAO.addCongTrinh(ct)) {
-					modelCT.addRow(
-							new Object[] { tbl_QLCT.getRowCount() + 1, maCT, ct.getTenCongTrinh(), ct.getDiaDiem(),
-									ct.getLoaiHinh(), ct.getGiayPhepSo(), ct.getNgayCapPhep(), ct.getNgayKhoiCong(),
-									ct.getNgayHoanThanh(), ct.isTrangThai() ? "Đã Hoàn Thành" : "Chưa Hoàn Thành" });
-					JOptionPane.showMessageDialog(this, "Thêm thành công");
-					XoaTrangCT();
+					if (congTrinh_DAO.addCongTrinh(ct)) {
+						modelCT.addRow(new Object[] { tbl_QLCT.getRowCount() + 1, ct.getMaCongTrinh(),
+								ct.getTenCongTrinh(), ct.getDiaDiem(), ct.getLoaiHinh(), ct.getGiayPhepSo(),
+								ct.getNgayCapPhep(), ct.getNgayKhoiCong(), ct.getNgayHoanThanh(),
+								ct.isTrangThai() ? "Đã Hoàn Thành" : "Chưa Hoàn Thành" });
+						JOptionPane.showMessageDialog(this, "Thêm Thành Công");
+						XoaTrangCT();
 
-				} else {
-					return;
+					} else {
+						return;
+					}
+				} catch (HeadlessException | SQLException e) {
+					e.printStackTrace();
 				}
 			}
 		}
 	}
+
+
 
 	private void btn_LuuNVActionPerformed(java.awt.event.ActionEvent evt) throws HeadlessException, SQLException {
 		Object o = evt.getSource();
@@ -6079,13 +6050,13 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 		boolean trangThai = Rbtn_TrangThaiDHT.isSelected();
 
-		if (!(tenCT.length() > 0 && tenCT.matches("[[A-Za-z] \\s]{1,20}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Tên Công Trình không có ký tự đặc biệt và tối đa là 20 chữ ");
+		if (!(tenCT.length() > 0)) {
+			JOptionPane.showMessageDialog(this, "Error: Tên Công Trình Không Được Để Trống");
 			return false;
 
 		}
-		if (!(diaChi.length() > 0 && diaChi.matches("[[A-Za-z0-9] \\s]{1,20}"))) {
-			JOptionPane.showMessageDialog(this, "Error: Địa chỉ không có ký tự đặc biệt và tối đa 20 chữ số ");
+		if (!(diaChi.length() > 0)) {
+			JOptionPane.showMessageDialog(this, "Error: Địa chỉ Không Được Để Trống");
 			return false;
 		}
 		if (dateCP == null) {
@@ -6113,8 +6084,8 @@ public class QLLD_Application extends javax.swing.JFrame {
 			return false;
 
 		}
-		if (txt_ctSoGiayPhep.getText().length() > 3) {
-			JOptionPane.showMessageDialog(null, "Error:Số Giấy Phép Không Được Để Trống Và Phải Nhiều Hơn 3 Số ");
+		if (txt_ctSoGiayPhep.getText().length() != 4) {
+			JOptionPane.showMessageDialog(null, "Error:Số Giấy Phép Không Được Để Trống Và Phải Là 4 Số ");
 			return false;
 		}
 		if (trangThai) {

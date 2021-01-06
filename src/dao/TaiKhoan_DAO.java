@@ -161,11 +161,10 @@ public class TaiKhoan_DAO {
 
 		try {
 
-			statement = con.prepareStatement("UPDATE tbl_TaiKhoan SET tenNhanVien=?, matKhau=? WHERE maNhanVien=?");
+			statement = con.prepareStatement("UPDATE tbl_TaiKhoan SET matKhau=? WHERE maNhanVien=?");
 
 			statement.setString(1, taiKhoan.getMaNhanVien());
-			statement.setString(2, taiKhoan.getTenTaiKhoan());
-			statement.setString(3, taiKhoan.getMatKhau());
+			statement.setString(2, taiKhoan.getMatKhau());
 			n = statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
