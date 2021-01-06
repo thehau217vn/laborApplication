@@ -83,14 +83,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private PhanCongNhanVien_DAO phanCong_DAO = new PhanCongNhanVien_DAO();
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
 	private String concac;
+	private static String maTKNV;
+
 	public QLLD_Application(String cc) throws SQLException {
 		this.concac = cc;
 		initComponents();
 		setSize(1366, 768);
 		setLocationRelativeTo(null);
 		setTitle("PHẦN MỀM QUẢN LÝ LAO ĐỘNG");
-		
-		
+
 	}
 
 	PhanCong phanCong = new PhanCong();
@@ -101,7 +102,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private DefaultComboBoxModel modelCongViec_laoDong;
 	private DefaultComboBoxModel modelCongViec_baoVe;
 	private JComboBox<String> cbbCongViec_BaoVe;
-	
 
 	class JDateChooserEditor extends DefaultCellEditor {
 
@@ -158,7 +158,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		txt_nvTimTenNV = new javax.swing.JTextField();
 		lbl_TimMaNV = new javax.swing.JLabel();
 		txt_nvTimMaNV = new javax.swing.JTextField();
-		
+
 		lblTimNV = new javax.swing.JLabel();
 		cbb_nvTimPB = new javax.swing.JComboBox<>();
 		lbl_TimChucVu = new javax.swing.JLabel();
@@ -169,7 +169,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		cbb_nvChonPB = new javax.swing.JComboBox<>();
 		lbl_MaNV = new javax.swing.JLabel();
 		txt_nvMaNV = new javax.swing.JTextField();
-		//txt_nvMaNV.setEditable(false);
+		txt_nvMaNV.setEditable(false);
 		lbl_TenNV = new javax.swing.JLabel();
 		txt_nvTenNV = new javax.swing.JTextField();
 		lbl_CMND = new javax.swing.JLabel();
@@ -236,6 +236,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_DiaChiCT = new javax.swing.JLabel();
 		txt_ctTenCT = new javax.swing.JTextField();
 		txt_ctMaCT = new javax.swing.JTextField();
+		// txt_ctMaCT.setEditable(false);
 		lbl_NgayHT = new javax.swing.JLabel();
 		lbl_NgayKC = new javax.swing.JLabel();
 		lbl_NgayCP = new javax.swing.JLabel();
@@ -317,6 +318,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_tkMaNV = new javax.swing.JLabel();
 		lbl_tkTenNV = new javax.swing.JLabel();
 		txt_tkTenNV = new javax.swing.JTextField();
+		txt_tkTenNV.setEditable(false);
 		txt_tkMaNV = new javax.swing.JTextField();
 		lbl_tkMatKhau = new javax.swing.JLabel();
 		txt_tkMatKhau = new javax.swing.JTextField();
@@ -434,17 +436,17 @@ public class QLLD_Application extends javax.swing.JFrame {
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
 		jTable1 = new javax.swing.JTable();
-		
+
 		modelCongViec_laoDong = new DefaultComboBoxModel<>();
 		modelCongViec_laoDong.addElement("A");
 		modelCongViec_laoDong.addElement("B");
 		cbbCongViec_LaoDong = new JComboBox<String>(modelCongViec_laoDong);
-		
+
 		modelCongViec_baoVe = new DefaultComboBoxModel<>();
 		modelCongViec_baoVe.addElement("C");
 		modelCongViec_baoVe.addElement("D");
 		cbbCongViec_BaoVe = new JComboBox<String>(modelCongViec_baoVe);
-		
+
 		jToolBar1.setRollover(true);
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1437,7 +1439,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 
-
 			}
 
 			@Override
@@ -1697,7 +1698,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		});
 //=========================================ButtonGroup2===========================================================
 		ButtonGroup buttonGroup2 = new ButtonGroup();
-		buttonGroup2.add(Rbtn_pcTrangThaiDHT);
+		buttonGroup2.add(Rbtn_TrangThaiDHT);
 		buttonGroup2.add(Rbtn_TrangThaiCHT);
 
 		cbb_ctQuan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {}));
@@ -1707,10 +1708,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 				cbb_ctQuanActionPerformed(evt);
 			}
 		});
+
 		AutoCompleteDecorator.decorate(cbb_ctQuan);
 
 		cbb_ctPhuong.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {}));
-
+		AutoCompleteDecorator.decorate(cbb_ctPhuong);
 		lbl_DiaChi5.setFont(new java.awt.Font("Tahoma", 1, 14));
 		lbl_DiaChi5.setText("Số nhà, tên đường:");
 
@@ -1721,19 +1723,19 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_LoaiHinh.setText("Loại hình:");
 
 		cbb_ctLoaiHinhCT.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dân Dụng", "Công Nghiệp" }));
-		try {
-			Connection con = ConnectDB.getConnect();
-			String sql = "SELECT maCongTrinh FROM tbl_CongTrinh";
-			Statement statement = con.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				cbb_ctLoaiHinhCT.addItem(resultSet.getString(1));
-			}
-		} catch (SQLException e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		AutoCompleteDecorator.decorate(cbb_ctLoaiHinhCT);
+//		try {
+//			Connection con = ConnectDB.getConnect();
+//			String sql = "SELECT loaiHinh FROM tbl_CongTrinh";
+//			Statement statement = con.createStatement();
+//			ResultSet resultSet = statement.executeQuery(sql);
+//			while (resultSet.next()) {
+//				cbb_ctLoaiHinhCT.addItem(resultSet.getString(1));
+//			}
+//		} catch (SQLException e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//		AutoCompleteDecorator.decorate(cbb_ctLoaiHinhCT);
 
 		javax.swing.GroupLayout pn_ThemCTLayout = new javax.swing.GroupLayout(pn_ThemCT);
 		pn_ThemCT.setLayout(pn_ThemCTLayout);
@@ -1929,6 +1931,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 				.split(";");
 		modelCT = new DefaultTableModel(headerCT, 0);
 		tbl_QLCT.setModel(modelCT);
+		tbl_QLCT.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scroll_QLCT.setViewportView(tbl_QLCT);
 		if (tbl_QLCT.getColumnModel().getColumnCount() > 0) {
 			tbl_QLCT.getColumnModel().getColumn(0).setMinWidth(40);
@@ -1947,6 +1950,10 @@ public class QLLD_Application extends javax.swing.JFrame {
 			tbl_QLCT.getColumnModel().getColumn(6).setMaxWidth(120);
 			tbl_QLCT.getColumnModel().getColumn(7).setMinWidth(130);
 			tbl_QLCT.getColumnModel().getColumn(7).setMaxWidth(130);
+			tbl_QLCT.getColumnModel().getColumn(8).setMinWidth(130);
+			tbl_QLCT.getColumnModel().getColumn(8).setMaxWidth(130);
+			tbl_QLCT.getColumnModel().getColumn(9).setMinWidth(130);
+			tbl_QLCT.getColumnModel().getColumn(9).setMaxWidth(130);
 		}
 		tbl_QLCT.addMouseListener(new MouseListener() {
 
@@ -1957,11 +1964,26 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				int row = tbl_QLCT.getSelectedRow();
 				String[] diaChi = modelCT.getValueAt(row, 3).toString().split(",");
 				txt_ctMaCT.setText(modelCT.getValueAt(row, 1).toString());
 				txt_ctTenCT.setText(modelCT.getValueAt(row, 2).toString());
-				//txt_ctDiaChiCT.setText(modelCT.getValueAt(row, 3).toString());
+				// txt_ctDiaChiCT.setText(modelCT.getValueAt(row, 3).toString());
 				txt_ctDiaChiCT.setText(diaChi[0]);
 				cbb_ctQuan.setSelectedItem(diaChi[2]);
 				cbb_ctPhuong.setSelectedItem(diaChi[1]);
@@ -1995,22 +2017,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 				} else {
 					Rbtn_TrangThaiCHT.setSelected(true);
 				}
-
-			}
-
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
 
 			}
 		});
@@ -2052,16 +2058,16 @@ public class QLLD_Application extends javax.swing.JFrame {
 		});
 
 		txt_ctTimMaCT.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dân Dụng", "Công Nghiệp" }));
-		cbb_ctLoaiHinhCT.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				try {
-					cbb_ctLoaiHinhCTActionPerformed(evt);
-				} catch (SQLException e) {
-
-					e.printStackTrace();
-				}
-			}
-		});
+//		cbb_ctLoaiHinhCT.addActionListener(new java.awt.event.ActionListener() {
+//			public void actionPerformed(java.awt.event.ActionEvent evt) {
+//				try {
+//					cbb_ctLoaiHinhCTActionPerformed(evt);
+//				} catch (SQLException e) {
+//
+//					e.printStackTrace();
+//				}
+//			}
+//		});
 
 		javax.swing.GroupLayout pn_QLCongTrinhLayout = new javax.swing.GroupLayout(pn_QLCongTrinh);
 		pn_QLCongTrinh.setLayout(pn_QLCongTrinhLayout);
@@ -2644,9 +2650,28 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_TimNV.setText("TÌM KIẾM NHÂN VIÊN");
 
 		cbb_tkTimPB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Phòng ban" }));
+		try {
+			Connection con = ConnectDB.getConnect();
+			String sql = "SELECT maPhongBan FROM tbl_PhongBan";
+			Statement statement = con.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				cbb_tkTimPB.addItem(resultSet.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		AutoCompleteDecorator.decorate(cbb_tkTimPB);
+
 		cbb_tkTimPB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				cbb_tkTimPBActionPerformed(evt);
+				try {
+					cbb_tkTimPBActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -2655,7 +2680,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 		btn_tkTimNV.setText("TÌM KIẾM");
 		btn_tkTimNV.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btn_tkTimNVActionPerformed(evt);
+				try {
+					btn_tkTimNVActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -2670,6 +2700,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 		lbl_tkMaNV.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_tkMaNV.setText("Mã Nhân Viên:");
+		maTKNV = txt_tkMaNV.getText();
 
 		lbl_tkTenNV.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_tkTenNV.setText("Tên Nhân Viên:");
@@ -2691,7 +2722,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 		btn_LuuTK.setText("Lưu");
 		btn_LuuTK.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btn_LuuTKActionPerformed(evt);
+				try {
+					btn_LuuTKActionPerformed(evt);
+				} catch (HeadlessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -2700,7 +2736,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 		btn_XoaTK.setText("Xóa");
 		btn_XoaTK.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btn_XoaTKActionPerformed(evt);
+				try {
+					btn_XoaTKActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -2718,7 +2759,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 		btn_CapNhatTK.setText("Cập Nhật");
 		btn_CapNhatTK.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btn_CapNhatTKActionPerformed(evt);
+				try {
+					btn_CapNhatTKActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -2812,7 +2858,38 @@ public class QLLD_Application extends javax.swing.JFrame {
 			tbl_QLTK.getColumnModel().getColumn(0).setMinWidth(50);
 			tbl_QLTK.getColumnModel().getColumn(0).setMaxWidth(50);
 		}
-		
+		tbl_QLTK.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+
+				int row = tbl_QLTK.getSelectedRow();
+				txt_tkMaNV.setText(modelTKNV.getValueAt(row, 1).toString());
+				txt_tkTenNV.setText(modelTKNV.getValueAt(row, 2).toString());
+				txt_tkMatKhau.setText(modelTKNV.getValueAt(row, 3).toString());
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+			}
+		});
 
 		javax.swing.GroupLayout pn_DsTaiKhoanLayout = new javax.swing.GroupLayout(pn_DsTaiKhoan);
 		pn_DsTaiKhoan.setLayout(pn_DsTaiKhoanLayout);
@@ -4387,19 +4464,56 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 	}
 
-	private void btn_CapNhatTKActionPerformed(java.awt.event.ActionEvent evt) {
+	private void btn_CapNhatTKActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+		String maTaiKhoan = txt_tkMaNV.getText();
+		String tenTaiKhoan = txt_tkTenNV.getText();
+		String matKhau = txt_tkMatKhau.getText();
+		TaiKhoan tk = new TaiKhoan(maTaiKhoan, tenTaiKhoan, matKhau);
+		if (txt_tkMatKhau.getText().equalsIgnoreCase(txt_tkNLMatKhau.getText())) {
+			taiKhoan_DAO.updateTaiKhoan(tk);
+			deleteDataQLTKNV();
+			getDataQLTK();
+			JOptionPane.showMessageDialog(this, "Sửa Thành Công");
+		} else {
+			JOptionPane.showMessageDialog(this, "Error:Hai Mật Khẩu Không Trùng Nhau!!!");
+		}
+
 	}
 
 	private void btn_XoaTrangTKActionPerformed(java.awt.event.ActionEvent evt) {
+		Object o = evt.getSource();
+		if (o.equals(btn_XoaTrangTK)) {
+			txt_tkMaNV.setText("");
+			txt_tkTenNV.setText("");
+			txt_tkMatKhau.setText("");
+		}
 	}
 
-	private void btn_XoaTKActionPerformed(java.awt.event.ActionEvent evt) {
+	private void btn_XoaTKActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+		Object o = evt.getSource();
+		if (o.equals(btn_XoaTK)) {
+			int rowIndex = tbl_QLTK.getSelectedRow();
+			String rowData = modelTKNV.getValueAt(rowIndex, 1).toString();
+
+			if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				taiKhoan_DAO.deleteTaiKhoan(rowData);
+				modelTKNV.removeRow(rowIndex);
+			}
+		}
 	}
 
 	private void txt_tkTenNVActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 
-	private void cbb_tkTimPBActionPerformed(java.awt.event.ActionEvent evt) {
+	private void cbb_tkTimPBActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+		modelTKNV.setRowCount(0);
+		String maPhongBan = cbb_tkTimPB.getSelectedItem().toString();
+		if (cbb_tkTimPB.getSelectedItem().toString().equalsIgnoreCase(maPhongBan)) {
+			cbb_tkTimPB.setSelectedItem(maPhongBan);
+			getDataTheoTK(maPhongBan);
+		}
+
 	}
 
 	private void txt_tkTimTenNVActionPerformed(java.awt.event.ActionEvent evt) {
@@ -4408,10 +4522,10 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void btn_CapNhatChVActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		Object o = evt.getSource();
 		if (o.equals(btn_CapNhatChV)) {
-			String maCongViec = txt_cvMaChV.getText();
-			String tenCongViec = txt_cvTenChV.getText();
+			String maChucVu = txt_cvMaChV.getText();
+			String tenChucVu = txt_cvTenChV.getText();
 			String moTa = txt_cvMoTaChV.getText();
-			ChucVu chucVu = new ChucVu(maCongViec, tenCongViec, moTa);
+			ChucVu chucVu = new ChucVu(maChucVu, tenChucVu, moTa);
 			chucVu_DAO.updateChucVu(chucVu);
 			deleteDataQLChucVu();
 			getDataQLCVu();
@@ -4434,8 +4548,9 @@ public class QLLD_Application extends javax.swing.JFrame {
 			int rowIndex = tbl_QLChV.getSelectedRow();
 			String rowData = modelChV.getValueAt(rowIndex, 1).toString();
 			chucVu_DAO.deleteChucVu(rowData);
-			
-			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+
+			if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				modelChV.removeRow(rowIndex);
 			}
 		}
@@ -4475,7 +4590,8 @@ public class QLLD_Application extends javax.swing.JFrame {
 			String rowData = modelCV.getValueAt(rowIndex, 1).toString();
 			congViec_DAO.deleteCongViec(rowData);
 			modelCV.removeRow(rowIndex);
-			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				modelCV.removeRow(rowIndex);
 			}
 		}
@@ -4532,11 +4648,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 			int rowIndex = tbl_QLCT.getSelectedRow();
 			String rowData = modelCT.getValueAt(rowIndex, 1).toString();
 			congTrinh_DAO.deleteCongTrinh(rowData);
-			
-			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+
+			if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				modelCT.removeRow(rowIndex);
 			}
-			
+
 		}
 	}
 
@@ -4580,8 +4697,9 @@ public class QLLD_Application extends javax.swing.JFrame {
 			int rowIndex = tbl_QLPB.getSelectedRow();
 			String rowData = modelPB.getValueAt(rowIndex, 1).toString();
 			phongBan_DAO.deletePhongBan(rowData);
-			
-			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+
+			if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				modelPB.removeRow(rowIndex);
 			}
 		}
@@ -4644,12 +4762,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 			int rowIndex = tbl_QLNV.getSelectedRow();
 			String rowData = modelNV.getValueAt(rowIndex, 1).toString();
 			nhanVien_DAO.deleteNhanVien(rowData);
-			
-			if(JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+
+			if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "WARNING",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				modelNV.removeRow(rowIndex);
 			}
-			
-			
+
 		}
 	}
 
@@ -4683,25 +4801,25 @@ public class QLLD_Application extends javax.swing.JFrame {
 			if (validDataCT()) {
 				String maCT = txt_ctMaCT.getText();
 				String tenCT = txt_ctTenCT.getText();
-				String diaChi = txt_ctDiaChiCT.getText();
+				String diaChi = txt_ctDiaChiCT.getText() + ", " + cbb_ctPhuong.getSelectedItem().toString() + ", "
+						+ cbb_ctQuan.getSelectedItem().toString();
+				// String diaChi = txt_ctDiaChiCT.getText() ;
 				String loaiHinh = cbb_ctLoaiHinhCT.getSelectedItem().toString();
-				String tempSGP = txt_ctSoGiayPhep.getText();
-				int giayPhepSo = Integer.parseInt(tempSGP);
+				int giayPS = Integer.parseInt(txt_ctSoGiayPhep.getText());
 				SimpleDateFormat nCP = new SimpleDateFormat("yyyy-MM-dd");
 				String ngayCP = nCP.format(DateChooser_ctNgayCP.getDate());
 				SimpleDateFormat nKC = new SimpleDateFormat("yyyy-MM-dd");
 				String ngayKC = nKC.format(DateChooser_ctNgayKC.getDate());
 				SimpleDateFormat nHT = new SimpleDateFormat("yyyy-MM-dd");
 				String ngayHT = nHT.format(DateChooser_ctNgayHT.getDate());
-				boolean trangThai = Rbtn_TrangThaiDHT.isSelected();
-
-				CongTrinh ct = new CongTrinh(maCT, tenCT, diaChi, loaiHinh, giayPhepSo, ngayCP, ngayKC, ngayHT,
-						trangThai);
+				boolean trangthai = Rbtn_pcTrangThaiDHT.isSelected();
+				CongTrinh ct = new CongTrinh(maCT, tenCT, diaChi, loaiHinh, giayPS, ngayCP, ngayKC, ngayHT, trangthai);
 
 				if (congTrinh_DAO.addCongTrinh(ct)) {
-					modelCT.addRow(new Object[] { tbl_QLCT.getRowCount() + 1, ct.getMaCongTrinh(), ct.getTenCongTrinh(),
-							ct.getDiaDiem(), ct.getNgayCapPhep(), ct.getNgayKhoiCong(), ct.getNgayHoanThanh(),
-							ct.isTrangThai() ? "Đã hoàn thành" : "Chưa hoàn thành" });
+					modelCT.addRow(
+							new Object[] { tbl_QLCT.getRowCount() + 1, maCT, ct.getTenCongTrinh(), ct.getDiaDiem(),
+									ct.getLoaiHinh(), ct.getGiayPhepSo(), ct.getNgayCapPhep(), ct.getNgayKhoiCong(),
+									ct.getNgayHoanThanh(), ct.isTrangThai() ? "Đã hoàn thành" : "Chưa hoàn thành" });
 					JOptionPane.showMessageDialog(this, "Thêm thành công");
 
 				} else {
@@ -4715,34 +4833,35 @@ public class QLLD_Application extends javax.swing.JFrame {
 		Object o = evt.getSource();
 		if (o.equals(btn_LuuNV)) {
 			if (validDataNV()) {
-			String maNhanVien = txt_nvMaNV.getText();
-			String tenNhanVien = txt_nvTenNV.getText();
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			String ngaySinh = dateFormat.format(DateChooser_NamSinh.getDate());
-			boolean gioiTinh = Rbtn_Nam.isSelected();
-			String soCMND = txt_nvCMND.getText();
-			String diaChi = txt_nvDiaChiNV.getText() + ", " + cbb_nvPhuongXa.getSelectedItem().toString() + ", "
-					+ cbb_nvQuanHuyen.getSelectedItem().toString() + ", " + cbb_nvThanhPho.getSelectedItem().toString();
-			String soDT = txt_nvSDT.getText();
-			String tenChucVu = cbb_nvChonChV.getSelectedItem().toString();
-			String maPhongBan = cbb_nvChonPB.getSelectedItem().toString();
+				// String maNhanVien = txt_nvMaNV.getText();
+				String tenNhanVien = txt_nvTenNV.getText();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String ngaySinh = dateFormat.format(DateChooser_NamSinh.getDate());
+				boolean gioiTinh = Rbtn_Nam.isSelected();
+				String soCMND = txt_nvCMND.getText();
+				String diaChi = txt_nvDiaChiNV.getText() + ", " + cbb_nvPhuongXa.getSelectedItem().toString() + ", "
+						+ cbb_nvQuanHuyen.getSelectedItem().toString() + ", "
+						+ cbb_nvThanhPho.getSelectedItem().toString();
+				String soDT = txt_nvSDT.getText();
+				String tenChucVu = cbb_nvChonChV.getSelectedItem().toString();
+				String maPhongBan = cbb_nvChonPB.getSelectedItem().toString();
 
-			NhanVien nv = new NhanVien(maNhanVien, tenNhanVien, ngaySinh, gioiTinh, soCMND, diaChi, soDT, tenChucVu,
-					maPhongBan);
+				NhanVien nv = new NhanVien(nhanVien_DAO.sinhMaNVTuDong(), tenNhanVien, ngaySinh, gioiTinh, soCMND,
+						diaChi, soDT, tenChucVu, maPhongBan);
 
-			try {
-				if (nhanVien_DAO.addNhanVien(nv)) {
-					modelNV.addRow(new Object[] { tbl_QLNV.getRowCount() + 1, nv.getMaNhanVien(), nv.getTenNhanVien(),
-							nv.getNgaySinh(), nv.isGioiTinh() ? "Nam" : "Nữ", nv.getSoCMND(), nv.getDiaChi(),
-							nv.getSoDT(), nv.getChucVu(), nv.getPhongBan() });
-					JOptionPane.showMessageDialog(this, "Thêm Thành Công");
-				} else {
-					return;
+				try {
+					if (nhanVien_DAO.addNhanVien(nv)) {
+						modelNV.addRow(new Object[] { tbl_QLNV.getRowCount() + 1, nv.getMaNhanVien(),
+								nv.getTenNhanVien(), nv.getNgaySinh(), nv.isGioiTinh() ? "Nam" : "Nữ", nv.getSoCMND(),
+								nv.getDiaChi(), nv.getSoDT(), nv.getChucVu(), nv.getPhongBan() });
+						JOptionPane.showMessageDialog(this, "Thêm Thành Công");
+					} else {
+						return;
+					}
+				} catch (HeadlessException | SQLException e) {
+
+					e.printStackTrace();
 				}
-			} catch (HeadlessException | SQLException e) {
-
-				e.printStackTrace();
-			}
 			}
 		}
 	}
@@ -4751,7 +4870,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		Object o = evt.getSource();
 		if (o.equals(btn_LuuPB)) {
 			if (validDataPB()) {
-				//String maPB = txt_pbMaPB.getText();
+				// String maPB = txt_pbMaPB.getText();
 				String tenPB = txt_pbTenPB.getText();
 				String hotline = txt_pbHotline.getText();
 				String moTa = txt_pbMoTa.getText();
@@ -4772,15 +4891,15 @@ public class QLLD_Application extends javax.swing.JFrame {
 		Object o = evt.getSource();
 		if (o.equals(btn_LuuCV)) {
 			if (validDataCV()) {
-				//String maCongViec = txt_cvMaCV.getText();
+				// String maCongViec = txt_cvMaCV.getText();
 				String tenCongViec = txt_cvTenCV.getText();
 				String moTa = txt_cvMoTaCV.getText();
 				CongViec congViec = new CongViec(congViec_DAO.sinhMaCongViecTuDong(), tenCongViec, moTa);
 				if (congViec_DAO.addCongViec(congViec)) {
-					modelCV.addRow(new Object[] {tbl_QLCV.getRowCount() + 1,congViec.getMaCongViec(),
+					modelCV.addRow(new Object[] { tbl_QLCV.getRowCount() + 1, congViec.getMaCongViec(),
 							congViec.getTenCongViec(), congViec.getMoTa() });
 					JOptionPane.showMessageDialog(this, "Thêm Thành Công!!!");
-					
+
 				} else {
 					return;
 				}
@@ -4788,12 +4907,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 	}
 
-
 	private void btn_LuuChVActionPerformed(java.awt.event.ActionEvent evt) throws HeadlessException, SQLException {
 		Object o = evt.getSource();
 		if (o.equals(btn_LuuChV)) {
 			if (validDataChV()) {
-				//String maChucVu = txt_cvMaChV.getText();
+				// String maChucVu = txt_cvMaChV.getText();
 				String tenChucVu = txt_cvTenChV.getText();
 				String moTa = txt_cvMoTaChV.getText();
 				ChucVu chucVu = new ChucVu(chucVu_DAO.sinhMaChucVuTuDong(), tenChucVu, moTa);
@@ -4808,8 +4926,39 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 	}
 
-	private void btn_LuuTKActionPerformed(java.awt.event.ActionEvent evt) {
+	private void btn_LuuTKActionPerformed(java.awt.event.ActionEvent evt) throws HeadlessException, SQLException {
+//		try {
+//			Connection con = ConnectDB.getConnect();
+//			Statement statement = con.createStatement();
+//			String sql = "SELECT tenNhanVien WHERE maNhanVien = '" + maTKNV + "' ";
+//			System.out.println(maTKNV);
+//			ResultSet resultSet = statement.executeQuery(sql);
+//			while(resultSet.next()) {
+//				txt_tkTenNV.setText(resultSet.getString(1));
+//				txt_tkMatKhau.setText("123456");
+//				txt_tkNLMatKhau.setText("123456");
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
+		if (validDataTK()) {
+			String maNhanVien = txt_tkMaNV.getText();
+			String matKhau = txt_tkMatKhau.getText();
+			TaiKhoan taikhoan = new TaiKhoan(new NhanVien(maNhanVien), matKhau);
+			if (taiKhoan_DAO.addTaiKhoan(taikhoan)) {
+				modelTKNV.addRow(new Object[] { tbl_QLTK.getRowCount() + 1, taikhoan.getNhanVien().getMaNhanVien(),
+						taikhoan.getNhanVien().getTenNhanVien(), taikhoan.getMatKhau() });
+				JOptionPane.showMessageDialog(this, "Thêm Thành Công!!!");
+				deleteDataQLTKNV();
+				getDataQLTK();
+
+			} else {
+				JOptionPane.showMessageDialog(null, "Trung Tai Khoan");
+				;
+			}
+		}
 	}
 
 	private void btn_pcTimCTActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
@@ -4840,11 +4989,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 			}
 		} else {
-			JOptionPane.showMessageDialog(this, "Dữ Liệu Không Tồn Tại, Vui Lòng Chọn Lại Lựa Chọn Hoặc Nhập Lại Dữ Liệu");
+			JOptionPane.showMessageDialog(this,
+					"Dữ Liệu Không Tồn Tại, Vui Lòng Chọn Lại Lựa Chọn Hoặc Nhập Lại Dữ Liệu");
 		}
 
 	}
-	
+
 	private void btn_INActionPerformed(java.awt.event.ActionEvent evt) {
 		if (txt_pcMaCT.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Vui Lòng Chọn Công Trình Để PCNV!!");
@@ -4866,7 +5016,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 						row[4] = phanCong.getCbb_ChonCongViec().getSelectedItem().toString();
 						row[5] = phanCong.getPc_NgayBatDau();
 						row[6] = phanCong.getPc_NgayKetThuc();
-						
+
 						modelPCNVJCT.addRow(row);
 					}
 				}
@@ -4874,12 +5024,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 		} else {
 
-			
 			String chucVu = modelPCNVNV.getValueAt(tbl_pcDanhSachNV.getSelectedRow(), 4).toString();
-			if(chucVu.equalsIgnoreCase("Lao Động")) {
+			if (chucVu.equalsIgnoreCase("Lao Động")) {
 				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_LaoDong);
 				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
-			}else if(chucVu.equalsIgnoreCase("Bảo Vệ")) {
+			} else if (chucVu.equalsIgnoreCase("Bảo Vệ")) {
 				DefaultCellEditor cellEditorNVJCT = new DefaultCellEditor(cbbCongViec_BaoVe);
 				tbl_pcNVThamGia.getColumnModel().getColumn(4).setCellEditor(cellEditorNVJCT);
 			}
@@ -4911,7 +5060,35 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void btn_HoanTatActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 
-	private void btn_tkTimNVActionPerformed(java.awt.event.ActionEvent evt) {
+	private void btn_tkTimNVActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+		String in1 = txt_tkTimMaNV.getText().trim();
+		String in2 = txt_tkTimTenNV.getText().trim();
+		cbb_tkTimPB.setSelectedIndex(0);
+
+		if (in1 != null && in1.trim().length() > 0) {
+			List<TaiKhoan> dsTK = taiKhoan_DAO.getTKTheoMaNV(in1);
+			if (dsTK != null) {
+				deleteDataQLTKNV();
+				for (TaiKhoan taikhoan : dsTK) {
+					modelTKNV.addRow(new Object[] { tbl_QLTK.getRowCount() + 1, taikhoan.getNhanVien().getMaNhanVien(),
+							taikhoan.getNhanVien().getTenNhanVien(), taikhoan.getMatKhau() });
+				}
+			}
+
+		} else if (in2 != null && in2.trim().length() > 0) {
+			List<TaiKhoan> dsTK = taiKhoan_DAO.getTKTheoTenNV(in2);
+			if (dsTK != null) {
+				deleteDataQLTKNV();
+				for (TaiKhoan taikhoan : dsTK) {
+					modelTKNV.addRow(new Object[] { tbl_QLTK.getRowCount() + 1, taikhoan.getNhanVien().getMaNhanVien(),
+							taikhoan.getNhanVien().getTenNhanVien(), taikhoan.getMatKhau() });
+				}
+			}
+		} else {
+			deleteDataQLTKNV();
+			getDataQLTK();
+		}
+
 	}
 
 	private void btn_nvTimNVActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
@@ -4953,7 +5130,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void btn_pbTimPBActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		Object o = evt.getSource();
 		if (o.equals(btn_pbTimPB)) {
-			//String in1 = txt_pbMaPB.getText().trim();
+			// String in1 = txt_pbMaPB.getText().trim();
 			String in2 = txt_pbTimTenPB.getText().trim();
 			if (in2 != null && in2.trim().length() > 0) {
 				List<PhongBan> dsPB = phongBan_DAO.getPBTheoTenPB(in2);
@@ -4965,16 +5142,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 					}
 				}
-//			} else if (in2 != null && in2.trim().length() > 0) {
-//				List<PhongBan> dsPB = phongBan_DAO.getPhongBanTheoTenPB(in2);
-//				if (dsPB != null) {
-//					deleteDataQLPB();
-//
-//					for (PhongBan pb : dsPB) {
-//						modelPB.addRow(new Object[] { modelPB.getRowCount() + 1, pb.getMaPhongBan(),
-//								pb.getTenPhongBan(), pb.getHotLine(), pb.getMoTa() });
-//					}
-//				}
+
 			} else {
 				deleteDataQLPB();
 				getDataQLPB();
@@ -4986,7 +5154,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void btn_ctTimCTActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		Object o = evt.getSource();
 		if (o.equals(btn_ctTimCT)) {
-			//String in1 = txt_ctTimMaCT.getSelectedItem().toString().trim();
+			// String in1 = txt_ctTimMaCT.getSelectedItem().toString().trim();
 			String in2 = txt_ctTimTenCT.getText().trim();
 			if (in2 != null && in2.trim().length() > 0) {
 				List<CongTrinh> dsCT = congTrinh_DAO.getCongTrinhTheoTenCT(in2);
@@ -5011,10 +5179,10 @@ public class QLLD_Application extends javax.swing.JFrame {
 //				}
 //			}
 
-			else {
-				deleteDataQLCT();
-				getDataQLCT();
-			}
+				else {
+					deleteDataQLCT();
+					getDataQLCT();
+				}
 
 			}
 		}
@@ -5052,27 +5220,30 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 
 	}
+
 	private void cbb_pbTimMaPBActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		modelPB.setRowCount(0);
 		String maPhongBan = cbb_pbTimMaPB.getSelectedItem().toString();
 		if (cbb_pbTimMaPB.getSelectedItem().toString().equalsIgnoreCase(maPhongBan)) {
-			//cbb_nvTimChucVu.setSelectedIndex(0);
+			// cbb_nvTimChucVu.setSelectedIndex(0);
+			// cbb_pbTimMaPB.setSelectedItem(maPhongBan);
 			getDataTheoPB(maPhongBan);
 			cbb_pbTimMaPB.setSelectedItem(maPhongBan);
 		}
 
 	}
-	private void cbb_ctLoaiHinhCTActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
-		modelCT.setRowCount(0);
-		String maCongTrinh = cbb_ctLoaiHinhCT.getSelectedItem().toString();
-		if (cbb_ctLoaiHinhCT.getSelectedItem().toString().equalsIgnoreCase(maCongTrinh)) {
-			//cbb_nvTimChucVu.setSelectedIndex(0);
-			getDataTheoCT(maCongTrinh);
-			cbb_ctLoaiHinhCT.setSelectedItem(maCongTrinh);
-		}
 
-	}
-
+//	private void cbb_ctLoaiHinhCTActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+//		modelCT.setRowCount(0);
+//		String loaiHinh = cbb_ctLoaiHinhCT.getSelectedItem().toString();
+//		if (cbb_ctLoaiHinhCT.getSelectedItem().toString().equalsIgnoreCase(loaiHinh)) {
+//			String maCongTrinh = null;
+//			// cbb_nvTimChucVu.setSelectedIndex(0);
+//			getDataTheoCT(maCongTrinh);
+//				cbb_ctLoaiHinhCT.setSelectedItem(loaiHinh);
+//		}
+//
+//	}
 
 	private void txt_SoLuongActionPerformed(java.awt.event.ActionEvent evt) {
 	}
@@ -5196,9 +5367,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 			e.printStackTrace();
 		}
 	}
+
 	private void cbb_ctQuanActionPerformed(ActionEvent evt) {
 		try {
 			cbbQHFCTSelectChange(evt);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -5231,6 +5404,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 		this.cbb_nvQuanHuyen.setModel(modelQH);
 	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void loadCBB_QHFCT(String sql) throws SQLException {
 		DefaultComboBoxModel modelQH = new DefaultComboBoxModel();
@@ -5257,8 +5431,8 @@ public class QLLD_Application extends javax.swing.JFrame {
 			modelPX.addElement(px);
 		}
 		this.cbb_nvPhuongXa.setModel(modelPX);
-
 	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void loadCBB_PXFCT(String sql) throws SQLException {
 		ArrayList<PhuongXa> listPX = new ArrayList<>();
@@ -5283,6 +5457,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		String QH_ID = ((QuanHuyen) (Object) cbb_nvQuanHuyen.getSelectedItem()).getIdQH().toString();
 		loadCBB_PX("SELECT * FROM PhuongXa WHERE idQH  = " + QH_ID + "");
 	}
+
 	private void cbbQHFCTSelectChange(ActionEvent evt) throws SQLException {
 		String QH_ID = ((QuanHuyen) (Object) cbb_ctQuan.getSelectedItem()).getIdQH().toString();
 		loadCBB_PXFCT("SELECT * FROM PhuongXa WHERE idQH  = " + QH_ID + "");
@@ -5351,6 +5526,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 			}
 		}
 	}
+
 	private void getDataTheoCT(String id) throws SQLException {
 		int i = 1;
 		List<CongTrinh> list = congTrinh_DAO.getCongTrinhTheoLH(id);
@@ -5418,7 +5594,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 			}
 		}
 	}
-	
+
 	private void getDataQLPB() throws SQLException {
 		int i = 1;
 		List<PhongBan> list = phongBan_DAO.getAllPhongBan();
@@ -5457,13 +5633,24 @@ public class QLLD_Application extends javax.swing.JFrame {
 		DefaultTableModel tableModel = (DefaultTableModel) tbl_pcQLCT.getModel();
 		tableModel.getDataVector().removeAllElements();
 	}
-	
+
 	private void getDataQLTK() throws SQLException {
 		int i = 1;
-		List<TaiKhoan> list = taiKhoan_DAO.getAllTaiKhoan();
+		List<TaiKhoan> list = taiKhoan_DAO.getAllTaiKhoan1();
 		if (list.size() != 0) {
 			for (TaiKhoan tk : list) {
-				modelTKNV.addRow(new Object[] { i, tk.getMaTaiKhoan(), tk.getTenTaiKhoan(), tk.getMatKhau() });
+				modelTKNV.addRow(new Object[] { i, tk.getMaNhanVien(), tk.getTenTaiKhoan(), tk.getMatKhau() });
+				i++;
+			}
+		}
+	}
+
+	private void getDataTheoTK(String id) throws SQLException {
+		int i = 1;
+		List<TaiKhoan> list = taiKhoan_DAO.getTKTheoMaNV(id);
+		if (list.size() != 0) {
+			for (TaiKhoan tk : list) {
+				modelTKNV.addRow(new Object[] { i, tk.getMaNhanVien(), tk.getTenTaiKhoan(), tk.getMatKhau() });
 				i++;
 			}
 		}
@@ -5582,6 +5769,10 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 //===========================================CheckValidData==========================================
+	private boolean validDataTK() {
+		return true;
+	}
+
 	private boolean validDataNV() {
 		String phongBan = cbb_nvChonPB.getSelectedItem().toString();
 		String chucVu = cbb_nvChonChV.getSelectedItem().toString();
@@ -5613,12 +5804,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(null, "Error:Ngày Sinh Không Được Để Trống ");
 			return false;
 		}
-		if(!(CMND.length()>0 && CMND.matches("\\d{8}"))) {
-			JOptionPane.showMessageDialog(this,"Error: Số CMND Phải Đủ 8 Số");
+		if (!(CMND.length() > 0 && CMND.matches("\\d{8}"))) {
+			JOptionPane.showMessageDialog(this, "Error: Số CMND Phải Đủ 8 Số");
 			return false;
 		}
-		if(!(sDT.length()>0 && sDT.matches("\\d{10}"))) {
-			JOptionPane.showMessageDialog(this,"Error: Số Điện Thoại Phải Đủ 10 Số");
+		if (!(sDT.length() > 0 && sDT.matches("\\d{10}"))) {
+			JOptionPane.showMessageDialog(this, "Error: Số Điện Thoại Phải Đủ 10 Số");
 			return false;
 		}
 		if (cbb_nvThanhPho.getSelectedIndex() == 0) {
@@ -5641,73 +5832,69 @@ public class QLLD_Application extends javax.swing.JFrame {
 			return false;
 
 		}
-		
+
 		return true;
-		
+
 	}
-	
-	
-	
-	
-	
+
 	private boolean validDataCT() {
-		String tenCT = txt_ctTenCT.getText().trim();
-		String diaChi = txt_ctDiaChiCT.getText().trim();
-		String loaiHinh = cbb_ctLoaiHinhCT.getSelectedItem().toString();
-		String tempSGP = txt_ctSoGiayPhep.getText();
-		int giayPhepSo = Integer.parseInt(tempSGP);
-		Date dateCP, dateKC, dateHT;
-		dateCP = DateChooser_ctNgayCP.getDate();
-		dateKC = DateChooser_ctNgayKC.getDate();
-		dateHT = DateChooser_ctNgayHT.getDate();
-		
-		boolean trangThai = Rbtn_TrangThaiDHT.isSelected();
-
-		if (txt_ctTenCT.getText().length() == 0) {
-			JOptionPane.showMessageDialog(null, "Error:Tên Công Trình Không Được Để Trống ");
-			return false;
-
-		}
-		if (txt_ctDiaChiCT.getText().length() == 0) {
-			JOptionPane.showMessageDialog(null, "Error:Địa Chỉ, Số Nhà, Tên Đường Không Được Để Trống ");
-			return false;
-
-		}
-		if (loaiHinh == null) {
-			JOptionPane.showMessageDialog(null, "Error:Loại Hình Không Được Để Trống ");
-			return false;
-
-		}
-		if (txt_ctSoGiayPhep.getText().length() >0) {
-			JOptionPane.showMessageDialog(null, "Error:Số Giấy Phép Không Được Để Trống Và Lớn Hơn 0 ");
-			return false;
-
-		}
-		if (dateCP == null) {
-			JOptionPane.showMessageDialog(this, "Error: Chọn ngày cấp phép");
-			return false;
-		}
-		if (dateKC == null) {
-			JOptionPane.showMessageDialog(this, "Error: Chọn ngày khởi công");
-			return false;
-		}
-		if (dateHT == null) {
-			JOptionPane.showMessageDialog(this, "Error: Chọn ngày hoàn thành");
-			return false;
-		}
-		if (!(dateCP.before(dateKC))) {
-			JOptionPane.showMessageDialog(this, "Eror: Ngày cấp phép phải trước ngày khởi công");
-			return false;
-		}
-		if (!(dateKC.before(dateHT))) {
-			JOptionPane.showMessageDialog(this, "Eror: Ngày khởi công phải trước ngày hoàn thành");
-			return false;
-		}
-		if (trangThai) {
-			JOptionPane.showMessageDialog(null, "Error:Trạng Thái Không Được Để Trống ");
-			return false;
-
-		}
+//		String tenCT = txt_ctTenCT.getText().trim();
+//		String diaChi = txt_ctDiaChiCT.getText().trim();
+//		String loaiHinh = cbb_ctLoaiHinhCT.getSelectedItem().toString();
+//		String tempSGP = txt_ctSoGiayPhep.getText();
+//		int giayPhepSo = Integer.parseInt(tempSGP);
+//		Date dateCP, dateKC, dateHT;
+//		dateCP = DateChooser_ctNgayCP.getDate();
+//		dateKC = DateChooser_ctNgayKC.getDate();
+//		dateHT = DateChooser_ctNgayHT.getDate();
+//		
+//		boolean trangThai = Rbtn_TrangThaiDHT.isSelected();
+//
+//		if (txt_ctTenCT.getText().length() == 0) {
+//			JOptionPane.showMessageDialog(null, "Error:Tên Công Trình Không Được Để Trống ");
+//			return false;
+//
+//		}
+//		if (txt_ctDiaChiCT.getText().length() == 0) {
+//			JOptionPane.showMessageDialog(null, "Error:Địa Chỉ, Số Nhà, Tên Đường Không Được Để Trống ");
+//			return false;
+//
+//		}
+//		if (loaiHinh == null) {
+//			JOptionPane.showMessageDialog(null, "Error:Loại Hình Không Được Để Trống ");
+//			return false;
+//
+//		}
+//		if (txt_ctSoGiayPhep.getText().length() ==0) {
+//			JOptionPane.showMessageDialog(null, "Error:Số Giấy Phép Không Được Để Trống Và Lớn Hơn 0 ");
+//			return false;
+//
+//		}
+//		if (dateCP == null) {
+//			JOptionPane.showMessageDialog(this, "Error: Chọn ngày cấp phép");
+//			return false;
+//		}
+//		if (dateKC == null) {
+//			JOptionPane.showMessageDialog(this, "Error: Chọn ngày khởi công");
+//			return false;
+//		}
+//		if (dateHT == null) {
+//			JOptionPane.showMessageDialog(this, "Error: Chọn ngày hoàn thành");
+//			return false;
+//		}
+//		if (!(dateCP.before(dateKC))) {
+//			JOptionPane.showMessageDialog(this, "Eror: Ngày cấp phép phải trước ngày khởi công");
+//			return false;
+//		}
+//		if (!(dateKC.before(dateHT))) {
+//			JOptionPane.showMessageDialog(this, "Eror: Ngày khởi công phải trước ngày hoàn thành");
+//			return false;
+//		}
+//		if (trangThai) {
+//			JOptionPane.showMessageDialog(null, "Error:Trạng Thái Không Được Để Trống ");
+//			return false;
+//
+//		}
 		return true;
 
 	}
@@ -5716,7 +5903,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		String tenPB = txt_pbTenPB.getText().trim();
 		String hotLine = txt_pbHotline.getText().trim();
 		String moTa = txt_pbMoTa.getText().trim();
-	
+
 		if (txt_pbTenPB.getText().length() == 0) {
 			JOptionPane.showMessageDialog(null, "Error:Tên Phòng Ban Không Được Để Trống ");
 			return false;
@@ -5754,7 +5941,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private boolean validDataCV() {
 		String tenCV = txt_cvTenCV.getText().trim();
 		String moTa = txt_cvMoTaCV.getText().trim();
-	
+
 		if (txt_cvTenCV.getText().length() == 0) {
 			JOptionPane.showMessageDialog(null, "Error:Tên Công Việc Không Được Để Trống ");
 			return false;
@@ -5770,7 +5957,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 	private void validDataPCNV() {
-		
+
 	}
 
 	/**
@@ -5786,17 +5973,17 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(QLLD_Application.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		}
 
 		java.awt.EventQueue.invokeLater(new Runnable() {

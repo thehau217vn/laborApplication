@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import connectDB.ConnectDB;
 import entity.ChucVu;
+import entity.CongViec;
 
 public class ChucVu_DAO {
 	public ArrayList<ChucVu> getAllChucVu() {

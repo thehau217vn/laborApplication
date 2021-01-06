@@ -204,9 +204,9 @@ public class NhanVien_DAO {
 		Connection con = ConnectDB.getConnect();
 		PreparedStatement statement = null;
 		int n = 0;
-
+		
 		try {
-			statement = con.prepareStatement("INSERT INTO" + " tbl_NhanVien VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			statement = con.prepareStatement("INSERT INTO " + "tbl_NhanVien VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			statement.setString(1, nhanVien.getMaNhanVien());
 			statement.setString(2, nhanVien.getTenNhanVien());
 			statement.setString(3, nhanVien.getNgaySinh());
@@ -283,23 +283,24 @@ public class NhanVien_DAO {
 		return n > 0;
 	}
 	public String sinhMaNVTuDong() throws SQLException {
-		String count = null;
+		int tempID = 0;
+		String manhanVien = null;
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnect();
-		String sql = "select COUNT(tbl_NhanVien.maNhanVien) from tbl_NhanVien";
-		Statement statement;
-		try {
-			statement = con.createStatement();
-			ResultSet res = statement.executeQuery(sql);
-			res.next();
-			count = res.getInt(1) + 1 + "";
-		} catch (SQLException e) {
-			e.printStackTrace();
+		Statement statement = con.createStatement();
+		ResultSet res = statement.executeQuery("SELECT TOP 1 maNhanVien FROM tbl_NhanVien ORDER BY maNhanVien DESC");
+		while (res.next()) {
+			tempID = Integer.parseInt(res.getString(1).substring(5).trim());
 		}
-		for (int i = 0; i <= 3 - count.split("").length; i++) {
-			count = "0" + count;
+		tempID++;
+		if(Integer.toString(tempID).length() > 2) {
+			manhanVien = "HNVNV" + tempID; 
+		}else if(Integer.toString(tempID).length() > 1){
+			manhanVien = "HNVNV" + "0" + tempID; 
+		}else if(Integer.toString(tempID).length() == 1) {
+			manhanVien = "HNVNV" + "00" + tempID; 
 		}
-		return "HNVNV" + count;
+		return manhanVien;
 	}
 
 }

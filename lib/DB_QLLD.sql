@@ -78,7 +78,18 @@ CREATE TABLE tbl_PhanCongNhanVien
 	ngayKetThuc DATE NOT NULL,
 	PRIMARY KEY CLUSTERED (maNhanVien ASC, maCongTrinh ASC)
 )
+---MK
 
+SELECT * FROM tbl_TaiKhoan
+GO
+	INSERT INTO [dbo].[tbl_TaiKhoan] ([maNhanVien],[matKhau]) VALUES
+	(N'HNVNV001', N'123456'),
+	(N'HNVNV002', N'123456'),
+	(N'HNVNV003', N'123456'),
+	(N'HNVNV004', N'123456'),
+	(N'HNVNV005', N'123456');
+
+SELECT maNhanVien, maNhanVien AS maTaiKhoan, tenNhanVien, matKhau FROM tbl_Nhan
 --Phong Ban
 --(!) maPhongBan (EX: HNVPB001) 
 

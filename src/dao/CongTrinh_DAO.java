@@ -283,5 +283,26 @@ public class CongTrinh_DAO {
 		con.close();
 		return n > 0;
 	}
+	public String sinhMaCTTuDong() throws SQLException {
+		int tempID = 0;
+		String macongTrinh = null;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		Statement statement = con.createStatement();
+		ResultSet res = statement.executeQuery("SELECT TOP 1 maCongTrinh FROM tbl_CongTrinh ORDER BY maCongTrinh DESC");
+		while (res.next()) {
+			tempID = Integer.parseInt(res.getString(1).substring(5).trim());
+		}
+		tempID++;
+		if(Integer.toString(tempID).length() > 2) {
+			macongTrinh = "HNVCT" + tempID; 
+		}else if(Integer.toString(tempID).length() > 1){
+			macongTrinh = "HNVCT" + "0" + tempID; 
+		}else if(Integer.toString(tempID).length() == 1) {
+			macongTrinh = "HNVCT" + "00" + tempID; 
+		}
+		return macongTrinh;
+	}
+
 
 }
