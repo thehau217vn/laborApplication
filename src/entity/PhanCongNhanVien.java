@@ -15,6 +15,8 @@ public class PhanCongNhanVien {
 	private CongTrinh congTrinh;
 	private String ngayBatDau;
 	private String ngayKetThuc;
+	private String moTa;
+	private CongViec cv;
 
 	public PhanCongNhanVien() {
 		super();
@@ -54,6 +56,18 @@ public class PhanCongNhanVien {
 		this.congViec = congViec;
 		this.ngayBatDau = ngayBatDau;
 		this.ngayKetThuc = ngayKetThuc;
+	}
+	
+	public PhanCongNhanVien(CongTrinh congTrinh, String tenCongTrinh, String diaDiem, String congViec,
+			String ngayBatDau, String ngayKetThuc, String moTa) {
+		super();
+		this.congTrinh = congTrinh;
+		this.tenCongTrinh = tenCongTrinh;
+		this.diaDiem = diaDiem;
+		this.congViec = congViec;
+		this.ngayBatDau = ngayBatDau;
+		this.ngayKetThuc = ngayKetThuc;
+		this.moTa = moTa;
 	}
 
 	public NhanVien getNhanVien() {
@@ -167,5 +181,27 @@ public class PhanCongNhanVien {
 	public void setTenCongTrinh(String tenCongTrinh) {
 		this.tenCongTrinh = congTrinh.getTenCongTrinh();
 	}
+
+	public String getMoTa() {
+		return moTa;
+	}
+
+	public void setMoTa(String moTa) {
+		this.moTa = cv.getMoTa();
+	}
+
+	public void setCongViec(String congViec) {
+		this.congViec = congViec;
+	}
+
+	public CongViec getCv() {
+		return cv;
+	}
+
+	public void setCv(CongViec cv) {
+		this.cv = cv;
+	}
+	
+	
 
 }

@@ -32,8 +32,6 @@ public class PhongBan_DAO {
 		}
 		return dsPB;
 	}
-	
-	
 
 	public ArrayList<PhongBan> getTheoMaPB(String id) throws SQLException {
 		ArrayList<PhongBan> dsPB = new ArrayList<PhongBan>();
@@ -66,7 +64,7 @@ public class PhongBan_DAO {
 		return dsPB;
 	}
 
-	public ArrayList<PhongBan> getPhongBanTheoMaPB(String id) throws SQLException {
+	public ArrayList<PhongBan> getPBTheoMaPB(String id) throws SQLException {
 		ArrayList<PhongBan> dsPB = new ArrayList<PhongBan>();
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnect();
@@ -97,7 +95,7 @@ public class PhongBan_DAO {
 
 		return dsPB;
 	}
-	
+
 	public ArrayList<PhongBan> getPhongBanTheoTenPB(String id) throws SQLException {
 		ArrayList<PhongBan> dsPB = new ArrayList<PhongBan>();
 		ConnectDB.getInstance();
@@ -161,7 +159,8 @@ public class PhongBan_DAO {
 		PreparedStatement statement = null;
 		int n = 0;
 		try {
-			statement = con.prepareStatement("UPDATE tbl_PhongBan SET [tenPhongBan]=?, [hotLine]=?, [moTa]=? WHERE maPhongBan=?");
+			statement = con.prepareStatement(
+					"UPDATE tbl_PhongBan SET [tenPhongBan]=?, [hotLine]=?, [moTa]=? WHERE maPhongBan=?");
 			statement.setString(1, phongBan.getTenPhongBan());
 			statement.setString(2, phongBan.getHotLine());
 			statement.setString(3, phongBan.getMoTa());
@@ -201,5 +200,25 @@ public class PhongBan_DAO {
 			}
 		}
 		return n > 0;
+	}
+
+	public String sinhMaPBTuDong() throws SQLException {
+		String count = null;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		String sql = "select COUNT(tbl_PhongBan.maPhongBan) from tbl_PhongBan";
+		Statement statement;
+		try {
+			statement = con.createStatement();
+			ResultSet res = statement.executeQuery(sql);
+			res.next();
+			count = res.getInt(1) + 1 + "";
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		for (int i = 0; i <= 3 - count.split("").length; i++) {
+			count = "0" + count;
+		}
+		return "HNVPB" + count;
 	}
 }

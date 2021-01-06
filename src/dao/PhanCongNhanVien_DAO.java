@@ -57,8 +57,8 @@ public class PhanCongNhanVien_DAO {
 				String diaChi = resultSet.getString(6);
 				String soDT = resultSet.getString(7);
 				String tenChucVu = resultSet.getString(8);
-				PhanCongNhanVien phanCongNhanVien = new PhanCongNhanVien(nhanVien, tenNhanVien, ngaySinh, gioiTinh, soCMND,
-						diaChi, soDT, tenChucVu);
+				PhanCongNhanVien phanCongNhanVien = new PhanCongNhanVien(nhanVien, tenNhanVien, ngaySinh, gioiTinh,
+						soCMND, diaChi, soDT, tenChucVu);
 				dsPCNV.add(phanCongNhanVien);
 			}
 			con.close();
@@ -88,7 +88,47 @@ public class PhanCongNhanVien_DAO {
 				String congViec = resultSet.getString(4);
 				String ngayBatDau = resultSet.getString(5);
 				String ngayKetThuc = resultSet.getString(6);
-				PhanCongNhanVien phanCongNhanVien = new PhanCongNhanVien(congTrinh, tenCongTrinh, diaDiem, congViec, ngayBatDau, ngayKetThuc);
+				PhanCongNhanVien phanCongNhanVien = new PhanCongNhanVien(congTrinh, tenCongTrinh, diaDiem, congViec,
+						ngayBatDau, ngayKetThuc);
+				dsPCNV.add(phanCongNhanVien);
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}
+
+		return dsPCNV;
+	}
+
+	public ArrayList<PhanCongNhanVien> getPCNVTheoMaNVTT(String id) throws SQLException {
+		ArrayList<PhanCongNhanVien> dsPCNV = new ArrayList<PhanCongNhanVien>();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		PreparedStatement statement = null;
+		try {
+			String sql = "SELECT tbl_PhanCongNhanVien.maCongTrinh, tenCongTrinh, diaDiem, tbl_PhanCongNhanVien.tenCongViec, ngayBatDau, ngayKetThuc, tbl_CongViec.moTa FROM tbl_CongTrinh JOIN tbl_PhanCongNhanVien "
+					+ "ON tbl_PhanCongNhanVien.maCongTrinh = tbl_CongTrinh.maCongTrinh JOIN tbl_CongViec ON tbl_CongViec.tenCongViec = tbl_PhanCongNhanVien.tenCongViec "
+					+ "WHERE tbl_PhanCongNhanVien.maNhanVien = ?";
+			statement = con.prepareStatement(sql);
+			statement.setString(1, id);
+
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				CongTrinh congTrinh = new CongTrinh(resultSet.getString(1));
+				String tenCongTrinh = resultSet.getString(2);
+				String diaDiem = resultSet.getString(3);
+				String congViec = resultSet.getString(4);
+				String ngayBatDau = resultSet.getString(5);
+				String ngayKetThuc = resultSet.getString(6);
+				String moTa = resultSet.getString(7);
+				PhanCongNhanVien phanCongNhanVien = new PhanCongNhanVien(congTrinh, tenCongTrinh, diaDiem, congViec,
+						ngayBatDau, ngayKetThuc, moTa);
 				dsPCNV.add(phanCongNhanVien);
 			}
 			con.close();

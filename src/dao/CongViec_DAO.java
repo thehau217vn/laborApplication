@@ -16,7 +16,7 @@ public class CongViec_DAO {
 		try {
 			ConnectDB.getInstance();
 			Connection con = ConnectDB.getConnect();
-			String sql = "SELECT * FROM tbl_CongViec;";
+			String sql = "SELECT * FROM tbl_CongViec ORDER BY [maCongViec];";
 			Statement statement = con.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
 
@@ -64,14 +64,14 @@ public class CongViec_DAO {
 		return dsCV;
 
 	}
-	
+
 	public boolean addCongViec(CongViec congViec) throws SQLException {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnect();
 		PreparedStatement statement = null;
 		int n = 0;
 		try {
-			statement = con.prepareStatement("INSERT INTO " + " tbl_ChucVu VALUES(?, ?, ?)");
+			statement = con.prepareStatement("INSERT INTO" + " tbl_CongViec VALUES(?, ?, ?)");
 			statement.setString(1, congViec.getMaCongViec());
 			statement.setString(2, congViec.getTenCongViec());
 			statement.setString(3, congViec.getMoTa());
@@ -111,6 +111,51 @@ public class CongViec_DAO {
 			}
 		}
 		return n > 0;
+	}
+
+	public String sinhMaCongViecTuDong() throws SQLException {
+		String count = null;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		String sql = "select COUNT(tbl_CongViec.maCongViec) from tbl_CongViec";
+		Statement statement;
+		try {
+			statement = con.createStatement();
+			ResultSet res = statement.executeQuery(sql);
+			res.next();
+			count = res.getInt(1) + 1 + "";
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		for (int i = 0; i <= 3 - count.split("").length; i++) {
+			count = "0" + count;
+		}
+		return "HNVCV" + count;
+	}
+
+	public boolean kiemTraCongViecDaTonTai(String tenCongViecCanKiemTra) throws SQLException {
+		@SuppressWarnings("unused")
+		CongViec cv = null;
+		boolean result = true;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		String sql = "select *\r\n" + "from tbl_CongViec cv\r\n" + "where cv.TenCongViec like N'%"
+				+ tenCongViecCanKiemTra + "%'";
+		Statement statement;
+		ResultSet res = null;
+		try {
+			statement = con.createStatement();
+			res = statement.executeQuery(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			result = res.next();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	public boolean deleteCongViec(String id) throws SQLException {

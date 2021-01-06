@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -56,7 +57,7 @@ public class DangNhap extends javax.swing.JFrame {
 		lbl_TenTK = new javax.swing.JLabel();
 		lbl_MatKhau = new javax.swing.JLabel();
 		txt_TaiKhoan = new javax.swing.JTextField();
-		txt_MatKhau = new javax.swing.JTextField();
+		txt_MatKhau = new javax.swing.JPasswordField();
 		btn_DangNhap = new javax.swing.JButton();
 		btn_Thoat = new javax.swing.JButton();
 
@@ -180,8 +181,9 @@ public class DangNhap extends javax.swing.JFrame {
 		return false;
 	}
 
-	public boolean evenLogin() throws MalformedURLException {
+	public boolean evenLogin() throws MalformedURLException, ParseException {
 		String userName = txt_TaiKhoan.getText().trim();
+		@SuppressWarnings("deprecation")
 		String passWord = txt_MatKhau.getText().trim();
 		String sql = "SELECT * FROM tbl_TaiKhoan WHERE maNhanVien='" + userName + "' AND matKhau='" + passWord + "'";
 		String maTK = txt_TaiKhoan.getText();
@@ -236,7 +238,6 @@ public class DangNhap extends javax.swing.JFrame {
 		});
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JLabel LogoHNV;
 	private javax.swing.JButton btn_DangNhap;
 	private javax.swing.JButton btn_Thoat;
@@ -245,7 +246,6 @@ public class DangNhap extends javax.swing.JFrame {
 	private javax.swing.JLabel lbl_TenTK;
 	private javax.swing.JPanel pn_LoginLeft;
 	private javax.swing.JPanel pn_LoginRight;
-	private javax.swing.JTextField txt_MatKhau;
+	private javax.swing.JPasswordField txt_MatKhau;
 	private javax.swing.JTextField txt_TaiKhoan;
-	// End of variables declaration//GEN-END:variables
 }

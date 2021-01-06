@@ -40,7 +40,7 @@ public class NhanVien_DAO {
 		}
 		return dsNV;
 	}
-	
+
 	public ArrayList<NhanVien> getNhanVienInCT() {
 		ArrayList<NhanVien> dsNV = new ArrayList<NhanVien>();
 		try {
@@ -70,7 +70,7 @@ public class NhanVien_DAO {
 		}
 		return dsNV;
 	}
-	
+
 	public ArrayList<NhanVien> getNVTheoMaNV(String id) throws SQLException {
 		ArrayList<NhanVien> dsNV = new ArrayList<NhanVien>();
 		ConnectDB.getInstance();
@@ -133,7 +133,8 @@ public class NhanVien_DAO {
 				String soDT = resultSet.getString(7);
 				String chucVu = resultSet.getString(8);
 				String maPhongBan = resultSet.getString(9);
-				NhanVien nhanVien = new NhanVien(maNhanVien, tenNhanVien, ngaySinh, gioiTinh, soCMND, diaChi, soDT, chucVu, maPhongBan);
+				NhanVien nhanVien = new NhanVien(maNhanVien, tenNhanVien, ngaySinh, gioiTinh, soCMND, diaChi, soDT,
+						chucVu, maPhongBan);
 				dsNV.add(nhanVien);
 			}
 
@@ -149,7 +150,7 @@ public class NhanVien_DAO {
 
 		return dsNV;
 	}
-	
+
 	public ArrayList<NhanVien> getNVTheoTenNV(String id) throws SQLException {
 		ArrayList<NhanVien> dsNV = new ArrayList<NhanVien>();
 		ConnectDB.getInstance();
@@ -172,7 +173,8 @@ public class NhanVien_DAO {
 				String soDT = resultSet.getString(7);
 				String chucVu = resultSet.getString(8);
 				String maPhongBan = resultSet.getString(9);
-				NhanVien nhanVien = new NhanVien(maNhanVien, tenNhanVien, ngaySinh, gioiTinh, soCMND, diaChi, soDT, chucVu, maPhongBan);
+				NhanVien nhanVien = new NhanVien(maNhanVien, tenNhanVien, ngaySinh, gioiTinh, soCMND, diaChi, soDT,
+						chucVu, maPhongBan);
 				dsNV.add(nhanVien);
 			}
 
@@ -188,7 +190,7 @@ public class NhanVien_DAO {
 
 		return dsNV;
 	}
-	
+
 	public ArrayList<NhanVien> getNVTheoChVNV(String id) throws SQLException {
 		ArrayList<NhanVien> dsNV = new ArrayList<NhanVien>();
 		ConnectDB.getInstance();
@@ -211,7 +213,8 @@ public class NhanVien_DAO {
 				String soDT = resultSet.getString(7);
 				String chucVu = resultSet.getString(8);
 				String maPhongBan = resultSet.getString(9);
-				NhanVien nhanVien = new NhanVien(maNhanVien, tenNhanVien, ngaySinh, gioiTinh, soCMND, diaChi, soDT, chucVu, maPhongBan);
+				NhanVien nhanVien = new NhanVien(maNhanVien, tenNhanVien, ngaySinh, gioiTinh, soCMND, diaChi, soDT,
+						chucVu, maPhongBan);
 				dsNV.add(nhanVien);
 			}
 
@@ -228,7 +231,6 @@ public class NhanVien_DAO {
 		return dsNV;
 	}
 
-	
 	public boolean addNhanVien(NhanVien nhanVien) throws SQLException {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnect();
@@ -313,4 +315,23 @@ public class NhanVien_DAO {
 		return n > 0;
 	}
 
+	public String sinhMaNVTuDong() throws SQLException {
+		String count = null;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		String sql = "select COUNT(tbl_NhanVien.maNhanVien) from tbl_NhanVien";
+		Statement statement;
+		try {
+			statement = con.createStatement();
+			ResultSet res = statement.executeQuery(sql);
+			res.next();
+			count = res.getInt(1) + 1 + "";
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		for (int i = 0; i <= 3 - count.split("").length; i++) {
+			count = "0" + count;
+		}
+		return "HNVNV" + count;
+	}
 }
