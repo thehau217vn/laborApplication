@@ -13,16 +13,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
@@ -34,7 +29,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
@@ -85,11 +79,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private ChucVu_DAO chucVu_DAO = new ChucVu_DAO();
 	@SuppressWarnings("unused")
 	private TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
-	@SuppressWarnings("unused")
 	private PhanCongNhanVien_DAO phanCong_DAO = new PhanCongNhanVien_DAO();
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+	private String maTaiKhoan;
 
-	public QLLD_Application() throws SQLException {
+	public QLLD_Application(String account) throws SQLException {
+		this.maTaiKhoan = account;
 		initComponents();
 		setSize(1366, 768);
 		setLocationRelativeTo(null);
@@ -101,18 +96,25 @@ public class QLLD_Application extends javax.swing.JFrame {
 	DangNhap dangNhap = new DangNhap();
 	ThongTinPhanMem thongTin = new ThongTinPhanMem();
 	private JComboBox<String> cbbCongViec_LaoDong;
+	@SuppressWarnings("rawtypes")
 	private DefaultComboBoxModel modelCongViec_laoDong;
+	@SuppressWarnings("rawtypes")
 	private DefaultComboBoxModel modelCongViec_baoVe;
 	private JComboBox<String> cbbCongViec_BaoVe;
+	@SuppressWarnings("rawtypes")
 	private DefaultComboBoxModel modelCongViec_kTrucSu;
 	private JComboBox<String> cbbCongViec_kTrucSu;
+	@SuppressWarnings("rawtypes")
 	private DefaultComboBoxModel modelCongViec_KSXD;
 	private JComboBox<String> cbbCongViec_KSXD;
+	@SuppressWarnings("rawtypes")
 	private DefaultComboBoxModel modelCongViec_QLCT;
 	private JComboBox<String> cbbCongViec_QLCT;
+	@SuppressWarnings("rawtypes")
 	private DefaultComboBoxModel modelCongViec_KSD;
 	private JComboBox<String> cbbCongViec_KSD;
 	private JComboBox<String> cbb_SLNgayNghi;
+	@SuppressWarnings("rawtypes")
 	private DefaultComboBoxModel modelSLNgayNghi;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -3770,7 +3772,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 				}
 				cbb_nvChonChVu1.setSelectedItem(modelBCCNV.getValueAt(row, 8).toString());
 				try {
-					
+
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -4058,41 +4060,124 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 		lbl_ttcnPB.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_ttcnPB.setText("Phòng Ban:");
+		try {
+			Connection connection = ConnectDB.getConnect();
+			String sql = "SELECT tenPhongBan FROM tbl_PhongBan JOIN tbl_NhanVien \n"
+					+ "ON tbl_PhongBan.maPhongBan = tbl_NhanVien.maPhongBan\n"
+					+ "WHERE maNhanVien = '" + maTaiKhoan + "';";
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				txt_ttcnPhongBan.setText(resultSet.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		lbl_ttcnMaNV.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_ttcnMaNV.setText("Mã Nhân Viên:");
 
 		lbl_ttcnTenNV.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_ttcnTenNV.setText("Họ Và Tên:");
-
+		try {
+			Connection connection = ConnectDB.getConnect();
+			String sql = "SELECT tenNhanVien FROM tbl_NhanVien WHERE maNhanVien = '" + maTaiKhoan + "';";
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				txt_ttcnTenNV.setText(resultSet.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		lbl_ttcnGT.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_ttcnGT.setText("Giới Tính:");
 
 		Rbtn_ttcnNam.setFont(new java.awt.Font("Tahoma", 0, 16));
 		Rbtn_ttcnNam.setText("Nam");
-
+		
 		Rbtn_ttcnNu.setFont(new java.awt.Font("Tahoma", 0, 16));
 		Rbtn_ttcnNu.setText("Nữ");
 
+//==========================================ButtonGroup5==============================================
+		ButtonGroup buttonGroup5 = new ButtonGroup();
+		buttonGroup5.add(Rbtn_ttcnNam);
+		buttonGroup5.add(Rbtn_ttcnNu);
+
+		try {
+			Connection connection = ConnectDB.getConnect();
+			String sql = "SELECT gioiTinh FROM tbl_NhanVien WHERE maNhanVien = '" + maTaiKhoan + "';";
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				boolean gioiTinh = resultSet.getBoolean(1);
+				if (gioiTinh == true) {
+					Rbtn_ttcnNam.setSelected(true);
+				} else {
+					Rbtn_ttcnNu.setSelected(true);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		lbl_ttcnDiaChi.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_ttcnDiaChi.setText("Địa Chỉ:");
 
 		lbl_ttcnSDT.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_ttcnSDT.setText("Số Điện Thoại:");
-
+		try {
+			Connection connection = ConnectDB.getConnect();
+			String sql = "SELECT soDT FROM tbl_NhanVien WHERE maNhanVien = '" + maTaiKhoan + "';";
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				txt_ttcnSDT.setText(resultSet.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		lbl_ttcnTuoi.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_ttcnTuoi.setText("Năm Sinh:");
-
+		try {
+			Connection connection = ConnectDB.getConnect();
+			String sql = "SELECT ngaySinh FROM tbl_NhanVien WHERE maNhanVien = '" + maTaiKhoan + "';";
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		lbl_ttcnCMND.setFont(new java.awt.Font("Tahoma", 1, 16));
 		lbl_ttcnCMND.setText("Số CMND:");
 
-		txt_ttcnCMND.setText("VIEW");
-
+		try {
+			Connection connection = ConnectDB.getConnect();
+			String sql = "SELECT soCMND FROM tbl_NhanVien WHERE maNhanVien = '" + maTaiKhoan + "';";
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				txt_ttcnCMND.setText(resultSet.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		txt_ttcnDiaChi.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				txt_ttcnDiaChiActionPerformed(evt);
 			}
 		});
+		try {
+			Connection connection = ConnectDB.getConnect();
+			String sql = "SELECT diaChi FROM tbl_NhanVien WHERE maNhanVien = '" + maTaiKhoan + "';";
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				txt_ttcnDiaChi.setText(resultSet.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		btn_HoanTat.setFont(new java.awt.Font("Tahoma", 1, 14));
 		btn_HoanTat.setText("HOÀN TẤT");
@@ -4102,11 +4187,8 @@ public class QLLD_Application extends javax.swing.JFrame {
 			}
 		});
 
-		txt_ttcnTenNV.setText("ONLY VIEW");
+		txt_ttcnMaNV.setText(maTaiKhoan);
 
-		txt_ttcnMaNV.setText("ONLY VIEW");
-
-		txt_ttcnPhongBan.setText("ONLY VIEW");
 		txt_ttcnPhongBan.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				txt_ttcnPhongBanActionPerformed(evt);
@@ -5440,7 +5522,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private void getDataTKCTWD(String date) throws SQLException {
 		String id = txt_NamXD.getText();
 		List<CongTrinh> list = congTrinh_DAO.getCongTrinhTheoY(id);
@@ -5605,18 +5686,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 	}
 
-	private void getTotalDay(String id) throws SQLException {
-		int i = 1;
-		List<PhanCongNhanVien> list = phanCong_DAO.getPCNVTheoMaNV(id);
-		if (list.size() != 0) {
-			for (PhanCongNhanVien pcnv : list) {
-				modelBCCCT.addRow(new Object[] { i, pcnv.getCongTrinh().getMaCongTrinh(), pcnv.getTenCongTrinh(),
-						pcnv.getDiaDiem(), pcnv.getCongViec(), pcnv.getNgayBatDau(), pcnv.getNgayKetThuc() });
-				i++;
-			}
-		}
-	}
-
 //===========================================DeleteDataInTable========================================
 	@SuppressWarnings("unused")
 	private void deleteDataQLTKNV() {
@@ -5762,10 +5831,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 		return true;
 	}
 
-	private void validDataPCNV() {
-
-	}
-
 	/**
 	 * @param args the command line arguments
 	 */
@@ -5795,7 +5860,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					new QLLD_Application().setVisible(true);
+					new QLLD_Application("ACCOUNT").setVisible(true);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

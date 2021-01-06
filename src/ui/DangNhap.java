@@ -1,5 +1,20 @@
 package ui;
 
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.net.MalformedURLException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+
+import connectDB.ConnectDB;
+
 /**
  *
  * @author WIN10
@@ -16,6 +31,20 @@ public class DangNhap extends javax.swing.JFrame {
 	 */
 	public DangNhap() {
 		initComponents();
+		setLocationRelativeTo(null);
+		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "clickButton");
+		this.getRootPane().getActionMap().put("clickButton", new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent ae) {
+				btn_DangNhap.doClick();
+			}
+		});
+
 	}
 
 	private void initComponents() {
@@ -130,20 +159,58 @@ public class DangNhap extends javax.swing.JFrame {
 						Short.MAX_VALUE));
 
 		pack();
-	}// </editor-fold>//GEN-END:initComponents
+		btn_DangNhap.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String maTK = txt_TaiKhoan.getText();
+				try {
+					QLLD_Application application = new QLLD_Application(maTK);
+					application.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public boolean keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean evenLogin() throws MalformedURLException {
+		String userName = txt_TaiKhoan.getText().trim();
+		String passWord = txt_MatKhau.getText().trim();
+		String sql = "SELECT * FROM tbl_TaiKhoan WHERE maNhanVien='" + userName + "' AND matKhau='" + passWord + "'";
+		String maTK = txt_TaiKhoan.getText();
+		try {
+			QLLD_Application application = new QLLD_Application(maTK);
+			ResultSet rs = ConnectDB.executeQuery(sql);
+			while (rs.next()) {
+				application.setVisible(false);
+				setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+				application.dispose();
+				dispose();
+				setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+				return true;
+			}
+		} catch (HeadlessException e1) {
+			e1.printStackTrace();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		JOptionPane.showMessageDialog(null, "Sai Tài Khoản Hoặc Mật Khẩu, Vui Lòng Thử Lại!");
+		return false;
+
+	}
 
 	/**
 	 * @param args the command line arguments
+	 * @throws SQLException
 	 */
 	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
-		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-		// (optional) ">
-		/*
-		 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-		 * look and feel. For details see
-		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-		 */
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -160,10 +227,6 @@ public class DangNhap extends javax.swing.JFrame {
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
 			java.util.logging.Logger.getLogger(DangNhap.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
-		// </editor-fold>
-		// </editor-fold>
-		// </editor-fold>
-		// </editor-fold>
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
