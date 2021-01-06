@@ -236,7 +236,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		lbl_DiaChiCT = new javax.swing.JLabel();
 		txt_ctTenCT = new javax.swing.JTextField();
 		txt_ctMaCT = new javax.swing.JTextField();
-		// txt_ctMaCT.setEditable(false);
+		txt_ctMaCT.setEditable(false);
 		lbl_NgayHT = new javax.swing.JLabel();
 		lbl_NgayKC = new javax.swing.JLabel();
 		lbl_NgayCP = new javax.swing.JLabel();
@@ -4813,11 +4813,11 @@ public class QLLD_Application extends javax.swing.JFrame {
 				SimpleDateFormat nHT = new SimpleDateFormat("yyyy-MM-dd");
 				String ngayHT = nHT.format(DateChooser_ctNgayHT.getDate());
 				boolean trangthai = Rbtn_pcTrangThaiDHT.isSelected();
-				CongTrinh ct = new CongTrinh(maCT, tenCT, diaChi, loaiHinh, giayPS, ngayCP, ngayKC, ngayHT, trangthai);
+				CongTrinh ct = new CongTrinh(congTrinh_DAO.sinhMaCTTuDong(), tenCT, diaChi, loaiHinh, giayPS, ngayCP, ngayKC, ngayHT, trangthai);
 
 				if (congTrinh_DAO.addCongTrinh(ct)) {
 					modelCT.addRow(
-							new Object[] { tbl_QLCT.getRowCount() + 1, maCT, ct.getTenCongTrinh(), ct.getDiaDiem(),
+							new Object[] { tbl_QLCT.getRowCount() + 1, ct.getMaCongTrinh(), ct.getTenCongTrinh(), ct.getDiaDiem(),
 									ct.getLoaiHinh(), ct.getGiayPhepSo(), ct.getNgayCapPhep(), ct.getNgayKhoiCong(),
 									ct.getNgayHoanThanh(), ct.isTrangThai() ? "Đã hoàn thành" : "Chưa hoàn thành" });
 					JOptionPane.showMessageDialog(this, "Thêm thành công");
