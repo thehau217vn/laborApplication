@@ -1,16 +1,12 @@
 package ui;
 
 import java.awt.event.ActionEvent;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-import connectDB.ConnectDB;
 
 /**
  *

@@ -5256,7 +5256,26 @@ public class QLLD_Application extends javax.swing.JFrame {
 				tenCongViec = tbl_pcNVThamGia.getValueAt(i, 4).toString();
 				ngayBD = tbl_pcNVThamGia.getValueAt(i, 5).toString();
 				ngayKT = tbl_pcNVThamGia.getValueAt(i, 6).toString();
+				Date date1 = null;
+				Date date2 = null;
+				LocalDate localDate = LocalDate.now();
+				Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+				try {
+					date1 = sdf.parse(ngayBD);
+					date2 = sdf.parse(ngayKT);
 
+					if (date1.before(date) || date1.equals(date)) {
+						JOptionPane.showMessageDialog(null, "Ngày Bắt Đầu Phải Lớn Hơn Ngày Hiện Tại");
+						return;
+					}
+					if (date2.before(date1) || date2.equals(date1)) {
+						JOptionPane.showMessageDialog(null,
+								"Ngày Kết Thúc Không Được Bằng Hoặc Bé Hơn Ngày Bắt Đầu");
+						return;
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 				preparedStatement.setString(1, maNhanVien);
 				preparedStatement.setString(2, maCongTrinh);
 				preparedStatement.setString(3, tenCongViec);
