@@ -50,6 +50,7 @@ import entity.PhongBan;
 import entity.PhuongXa;
 import entity.TinhTP;
 import entity.QuanHuyen;
+import entity.TaiKhoan;
 
 /**
  *
@@ -2811,6 +2812,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 			tbl_QLTK.getColumnModel().getColumn(0).setMinWidth(50);
 			tbl_QLTK.getColumnModel().getColumn(0).setMaxWidth(50);
 		}
+		
 
 		javax.swing.GroupLayout pn_DsTaiKhoanLayout = new javax.swing.GroupLayout(pn_DsTaiKhoan);
 		pn_DsTaiKhoan.setLayout(pn_DsTaiKhoanLayout);
@@ -4359,6 +4361,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		getDataQLPB();
 		getDataQLCV();
 		getDataQLCVu();
+		getDataQLTK();
 		// getDataBCC();
 		pack();
 	}
@@ -5453,6 +5456,17 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void deleteDataPCNVCT() {
 		DefaultTableModel tableModel = (DefaultTableModel) tbl_pcQLCT.getModel();
 		tableModel.getDataVector().removeAllElements();
+	}
+	
+	private void getDataQLTK() throws SQLException {
+		int i = 1;
+		List<TaiKhoan> list = taiKhoan_DAO.getAllTaiKhoan();
+		if (list.size() != 0) {
+			for (TaiKhoan tk : list) {
+				modelTKNV.addRow(new Object[] { i, tk.getMaTaiKhoan(), tk.getTenTaiKhoan(), tk.getMatKhau() });
+				i++;
+			}
+		}
 	}
 
 //================================================PhanCongNhanVien=========================================================================
