@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import connectDB.ConnectDB;
 import entity.CongTrinh;
 
-
 public class CongTrinh_DAO {
 	public ArrayList<CongTrinh> getAllCongTrinh() {
 		ArrayList<CongTrinh> dsCT = new ArrayList<CongTrinh>();
@@ -41,7 +40,7 @@ public class CongTrinh_DAO {
 		}
 		return dsCT;
 	}
-	
+
 	public ArrayList<CongTrinh> getCongTrinhTheoLH(String id) throws SQLException {
 		ArrayList<CongTrinh> dsCT = new ArrayList<CongTrinh>();
 		ConnectDB.getInstance();
@@ -81,7 +80,6 @@ public class CongTrinh_DAO {
 
 		return dsCT;
 	}
-
 
 	public ArrayList<CongTrinh> getCongTrinhTheoMaCT(String id) throws SQLException {
 		ArrayList<CongTrinh> dsCT = new ArrayList<CongTrinh>();
@@ -283,6 +281,27 @@ public class CongTrinh_DAO {
 		}
 		con.close();
 		return n > 0;
+	}
+
+	public String sinhMaCTTuDong() throws SQLException {
+		int tempID = 0;
+		String macongTrinh = null;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnect();
+		Statement statement = con.createStatement();
+		ResultSet res = statement.executeQuery("SELECT TOP 1 maCongTrinh FROM tbl_CongTrinh ORDER BY maCongTrinh DESC");
+		while (res.next()) {
+			tempID = Integer.parseInt(res.getString(1).substring(5).trim());
+		}
+		tempID++;
+		if (Integer.toString(tempID).length() > 2) {
+			macongTrinh = "HNVCT" + tempID;
+		} else if (Integer.toString(tempID).length() > 1) {
+			macongTrinh = "HNVCT" + "0" + tempID;
+		} else if (Integer.toString(tempID).length() == 1) {
+			macongTrinh = "HNVCT" + "00" + tempID;
+		}
+		return macongTrinh;
 	}
 
 }
