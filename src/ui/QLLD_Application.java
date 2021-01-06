@@ -51,6 +51,7 @@ import entity.PhongBan;
 import entity.PhuongXa;
 import entity.TinhTP;
 import entity.QuanHuyen;
+import entity.TaiKhoan;
 
 /**
  *
@@ -78,7 +79,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private PhongBan_DAO phongBan_DAO = new PhongBan_DAO();
 	private CongViec_DAO congViec_DAO = new CongViec_DAO();
 	private ChucVu_DAO chucVu_DAO = new ChucVu_DAO();
-	@SuppressWarnings("unused")
 	private TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
 	private PhanCongNhanVien_DAO phanCong_DAO = new PhanCongNhanVien_DAO();
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
@@ -679,7 +679,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 		cbb_nvTimPB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Phòng Ban" }));
 		try {
 			Connection con = ConnectDB.getConnect();
-			String sql = "SELECT maPhongBan FROM tbl_PhongBan";
+			String sql = "SELECT maPhongBan + '-' + tenPhongBan FROM tbl_PhongBan";
 			Statement statement = con.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
@@ -2688,7 +2688,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 		btn_LuuTK.setText("Lưu");
 		btn_LuuTK.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btn_LuuTKActionPerformed(evt);
+				try {
+					btn_LuuTKActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -2715,7 +2720,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 		btn_CapNhatTK.setText("Cập Nhật");
 		btn_CapNhatTK.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btn_CapNhatTKActionPerformed(evt);
+				try {
+					btn_CapNhatTKActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -4444,7 +4454,20 @@ public class QLLD_Application extends javax.swing.JFrame {
 	private void cbb_LocCTActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 
-	private void btn_CapNhatTKActionPerformed(java.awt.event.ActionEvent evt) {
+	private void btn_CapNhatTKActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+		String maTaiKhoan = txt_tkMaNV.getText();
+		String tenTaiKhoan = txt_tkTenNV.getText();
+		String matKhau = txt_tkMatKhau.getText();
+		TaiKhoan tk = new TaiKhoan(maTaiKhoan, tenTaiKhoan, matKhau);
+		if (txt_tkMatKhau.getText().equalsIgnoreCase(txt_tkNLMatKhau.getText())) {
+			taiKhoan_DAO.updateTaiKhoan(tk);
+			deleteDataQLTKNV();
+			getDataQLTK();
+			JOptionPane.showMessageDialog(this, "Sửa Thành Công");
+		} else {
+			JOptionPane.showMessageDialog(this, "Error:Hai Mật Khẩu Không Trùng Nhau!!!");
+		}
+
 	}
 
 	private void btn_XoaTrangTKActionPerformed(java.awt.event.ActionEvent evt) {
@@ -4834,8 +4857,23 @@ public class QLLD_Application extends javax.swing.JFrame {
 		}
 	}
 
-	private void btn_LuuTKActionPerformed(java.awt.event.ActionEvent evt) {
+	private void btn_LuuTKActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+		if (validDataTK()) {
+			String maNhanVien = txt_tkMaNV.getText();
+			String matKhau = txt_tkMatKhau.getText();
+			TaiKhoan taikhoan = new TaiKhoan(new NhanVien(maNhanVien), matKhau);
+			if (taiKhoan_DAO.addTaiKhoan(taikhoan)) {
+				modelTKNV.addRow(new Object[] { tbl_QLTK.getRowCount() + 1, taikhoan.getNhanVien().getMaNhanVien(),
+						taikhoan.getNhanVien().getTenNhanVien(), taikhoan.getMatKhau() });
+				JOptionPane.showMessageDialog(this, "Thêm Thành Công!!!");
+				deleteDataQLTKNV();
+				getDataQLTK();
 
+			} else {
+				JOptionPane.showMessageDialog(null, "Trùng Tài Khoản!!!");
+				;
+			}
+		}
 	}
 
 	private void btn_pcTimCTActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
@@ -4853,6 +4891,7 @@ public class QLLD_Application extends javax.swing.JFrame {
 								ct.getNgayHoanThanh(), ct.isTrangThai() ? "Đã Hoàn Thành" : "Chưa Hoàn Thành" });
 					}
 				}
+				XoaTrangPCNV();
 			}
 		} else if (in2 && inIndex.length() > 0) {
 			List<CongTrinh> dsCT = congTrinh_DAO.getCongTrinhTheoTenCT(inIndex);
@@ -4865,10 +4904,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 								ct.getNgayHoanThanh(), ct.isTrangThai() ? "Đã Hoàn Thành" : "Chưa Hoàn Thành" });
 					}
 				}
+				XoaTrangPCNV();
 			}
 		} else {
 			JOptionPane.showMessageDialog(this,
 					"Dữ Liệu Không Tồn Tại, Vui Lòng Chọn Lại Lựa Chọn Hoặc Nhập Lại Dữ Liệu");
+			XoaTrangPCNV();
 		}
 
 	}
@@ -5114,12 +5155,12 @@ public class QLLD_Application extends javax.swing.JFrame {
 
 	private void cbb_nvTimPBActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		modelNV.setRowCount(0);
-		String maPhongBan = cbb_nvTimPB.getSelectedItem().toString();
-		if (cbb_nvTimPB.getSelectedItem().toString().equalsIgnoreCase(maPhongBan)) {
-			cbb_nvTimChucVu.setSelectedIndex(0);
-			getDataNVTheoPB(maPhongBan);
-			cbb_nvTimPB.setSelectedItem(maPhongBan);
-		}
+		String temp = cbb_nvTimPB.getSelectedItem().toString();
+		String[] temp1 = temp.split("-");
+		String maPhongBan = temp1[0];
+		cbb_nvTimChucVu.setSelectedIndex(0);
+		getDataNVTheoPB(maPhongBan);
+		cbb_nvTimPB.setSelectedItem(temp1[0] + "-" + temp1[1]);
 
 	}
 
@@ -5289,6 +5330,18 @@ public class QLLD_Application extends javax.swing.JFrame {
 		txt_tkTenNV.setText("");
 		txt_tkMatKhau.setText("");
 		txt_tkNLMatKhau.setText("");
+	}
+
+	private void XoaTrangPCNV() {
+		txt_pcMaCT.setText("");
+		txt_pcTenCT.setText("");
+		txt_pcDiaChiCT.setText("");
+		txt_ctSoGiayPhep1.setText("");
+		Rbtn_pcTrangThaiDHT.setSelected(false);
+		Rbtn_pcTrangThaiCHT.setSelected(false);
+		DateChooser_pcNgayCP.setDate(null);
+		DateChooser_pcNgayKC.setDate(null);
+		DateChooser_pcNgayHT.setDate(null);
 	}
 
 //===================================================DataAccessDiaChi==========================================================================
@@ -5727,6 +5780,16 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 //===========================================ThongTinCaNhan==========================================
+	private void getDataQLTK() throws SQLException {
+		int i = 1;
+		List<TaiKhoan> list = taiKhoan_DAO.getAllTaiKhoan1();
+		if (list.size() != 0) {
+			for (TaiKhoan tk : list) {
+				modelTKNV.addRow(new Object[] { i, tk.getMaNhanVien(), tk.getTenTaiKhoan(), tk.getMatKhau() });
+				i++;
+			}
+		}
+	}
 
 	private void getDataFTTC(String id) throws SQLException {
 		List<PhanCongNhanVien> list = phanCong_DAO.getPCNVTheoMaNVTT(id);
@@ -5742,7 +5805,6 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 //===========================================DeleteDataInTable========================================
-	@SuppressWarnings("unused")
 	private void deleteDataQLTKNV() {
 		DefaultTableModel tableModel = (DefaultTableModel) tbl_QLTK.getModel();
 		tableModel.getDataVector().removeAllElements();
@@ -5769,6 +5831,26 @@ public class QLLD_Application extends javax.swing.JFrame {
 	}
 
 //===========================================CheckValidData==========================================
+	private boolean validDataTK() {
+		if (txt_tkMaNV.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Error: Mã Nhân Viên Không Được Để Trống");
+			return false;
+		}
+		if (txt_tkMatKhau.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Error: Mật Khẩu Không Được Để Trống");
+			return false;
+		}
+		if(txt_tkNLMatKhau.getText().length() < 0) {
+			JOptionPane.showMessageDialog(this, "Error: Nhập Lại Mật Khẩu Đang Trống");
+			return false;
+		}
+		if(!txt_tkNLMatKhau.getText().equalsIgnoreCase(txt_tkMatKhau.getText())) {
+			JOptionPane.showMessageDialog(this, "Error: Hai Mật Khẩu Không Khớp Nhau");
+			return false;
+		}
+		return true;
+	}
+
 	private boolean validDataNV() {
 //		String phongBan = cbb_nvChonPB.getSelectedItem().toString();
 //		String chucVu = cbb_nvChonChV.getSelectedItem().toString();

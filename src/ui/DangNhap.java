@@ -166,7 +166,9 @@ public class DangNhap extends javax.swing.JFrame {
 				String maTK = txt_TaiKhoan.getText();
 				try {
 					QLLD_Application application = new QLLD_Application(maTK);
-					application.setVisible(true);
+					if (evenLogin()) {
+						application.setVisible(true);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
